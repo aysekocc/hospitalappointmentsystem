@@ -1,0 +1,62 @@
+package com.aysekoc.hospitalappointmantsystem.services.concretes;
+
+import com.aysekoc.hospitalappointmantsystem.entities.Appointment;
+import com.aysekoc.hospitalappointmantsystem.repositories.AppointmentRepository;
+import com.aysekoc.hospitalappointmantsystem.services.abstracts.AppointmentService;
+import com.aysekoc.hospitalappointmantsystem.services.dtos.AppointmentDto.CreateAppointment;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+@Service
+public class AppointmentServiceImpl implements AppointmentService {
+    private AppointmentRepository appointmentRepository;
+
+    public Page<Appointment> getAppointments(int pageNumber, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        return appointmentRepository.findAll(pageable);
+    }
+
+    @Override
+    public void createAppointment(CreateAppointment createAppointment) {
+        Appointment appointment = new Appointment();
+        appointment.setId(createAppointment.getId());
+        appointment.setStartedDate(createAppointment.getStartedDate());
+        appointment.setEndedDate(createAppointment.getEndedDate());
+        appointmentRepository.save(appointment);
+    }
+
+    @Override
+    public Optional<Appointment> findById(UUID id) {
+        Optional<Appointment> appointment = appointmentRepository.findById(id);
+        if (appointment.isEmpty()){
+            throw new RuntimeException("Appointment not found");
+        }
+        return appointment;
+    }
+
+    @Override
+    public List<Appointment> findByStartDate(LocalDateTime startDate) {
+        List<Appointment> appointments = new ArrayList<Appointment>();
+        return appointments;
+    }
+
+    @Override
+    public List<Appointment> findByEndDate(LocalDateTime endDate) {
+        List<Appointment> appointments = new ArrayList<Appointment>();
+        return appointments;
+    }
+
+    @Override
+    public void deleteAppointment(UUID id) {
+        appointmentRepository.deleteById(id);
+
+    }
+}
