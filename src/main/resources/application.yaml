@@ -23,3 +23,7 @@ spring:
         platform: postgresql
     profiles:
       active: dev
+server:
+  port: 8082
+
+

@@ -1,6 +1,7 @@
 package com.aysekoc.hospitalappointmantsystem.services.concretes;
 
 import com.aysekoc.hospitalappointmantsystem.config.JwtToken;
+import com.aysekoc.hospitalappointmantsystem.entities.Roles;
 import com.aysekoc.hospitalappointmantsystem.entities.User;
 import com.aysekoc.hospitalappointmantsystem.repositories.UserRepository;
 import com.aysekoc.hospitalappointmantsystem.services.abstracts.UserService;
@@ -27,15 +28,15 @@ public class UserServiceImpl implements UserService {
         if (userRepository.findByUsername(req.getUsername()).isPresent()) {
             throw new RuntimeException("User already exists!");
         }
-
         User user = new User();
         user.setUsername(req.getUsername());
-        user.setPassword(passwordEncoder.encode(req.getPassword())); // hash
+        user.setPassword(passwordEncoder.encode(req.getPassword()));
         user.setName(req.getName());
         user.setSurname(req.getSurname());
         user.setIdentity(req.getIdentity());
         user.setGender(req.getGender());
         user.setAge(req.getAge());
+        user.setRole(Roles.valueOf("ROLE_" + req.getRole()));
 
         userRepository.save(user);
     }
@@ -46,11 +47,8 @@ public class UserServiceImpl implements UserService {
         if (user.isEmpty() || !passwordEncoder.matches(req.getPassword(), user.get().getPassword())) {
             throw new BadCredentialsException("Invalid username or password");
         }
-
         return jwtToken.generateToken(user.get().getUsername(), user.get().getRole().name());
     }
-
-
 
     @Override
     public Optional<User> findById(UUID id) {

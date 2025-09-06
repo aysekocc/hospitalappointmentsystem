@@ -1,4 +1,5 @@
 package com.aysekoc.hospitalappointmantsystem.services.dtos.UserDto;
+import com.aysekoc.hospitalappointmantsystem.entities.Roles;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

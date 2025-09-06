@@ -5,12 +5,14 @@ import com.aysekoc.hospitalappointmantsystem.config.JwtToken;
 import com.aysekoc.hospitalappointmantsystem.entities.User;
 import com.aysekoc.hospitalappointmantsystem.services.abstracts.UserService;
 import com.aysekoc.hospitalappointmantsystem.services.dtos.UserDto.CreateUserRequest;
+import com.aysekoc.hospitalappointmantsystem.services.dtos.UserDto.LoginResponse;
 import com.aysekoc.hospitalappointmantsystem.services.dtos.UserDto.UserLoginRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +24,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:5181")
 public class UserController {
 
 
@@ -29,24 +32,43 @@ public class UserController {
     private final AuthenticationManager authenticationManager;
     private final JwtToken jwtToken;
 
-    @PreAuthorize("hasAnyRole('ADMIN','DOCTOR','USER')")
+
     @PostMapping("/register")
     public void register(@RequestBody CreateUserRequest req) {
         userService.register(req);
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN','DOCTOR','USER')")
+
     @PostMapping("/login")
-    public String login(@RequestBody UserLoginRequest request) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
-        if (authentication.isAuthenticated()) {
-            String role = authentication.getAuthorities().iterator().next().getAuthority();
-            return jwtToken.generateToken(request.getUsername(), role);
-        } else {
-            throw new RuntimeException("Invalid login attempt");
+    public ResponseEntity<?> login(@RequestBody UserLoginRequest request) {
+        try {
+            // Kullanıcı adı ve şifreyi doğrula
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            request.getUsername(),
+                            request.getPassword()
+                    )
+            );
+
+            // Doğruysa rol bilgisini al
+            String role = authentication.getAuthorities()
+                    .iterator()
+                    .next()
+                    .getAuthority();
+
+            // Token üret
+            String token = jwtToken.generateToken(request.getUsername(), role);
+
+            // Token'ı response olarak döndür
+            return ResponseEntity.ok(new LoginResponse(token, role));
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("Geçersiz kullanıcı adı veya şifre");
         }
+
     }
+
 
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/list/id")
