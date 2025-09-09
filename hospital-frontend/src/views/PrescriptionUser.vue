@@ -27,19 +27,22 @@
       </table>
 
       <div class="pagination mt-4 flex gap-4 items-center">
-        <button
-          :disabled="page === 0"
-          @click="fetchPrescriptions(page - 1, userId)">
+        <button :disabled="page === 0" @click="fetchPrescriptions(page - 1)">
           Önceki
         </button>
         <span>Sayfa {{ page + 1 }} / {{ totalPages }}</span>
-        <button
-          :disabled="page >= totalPages - 1"
-          @click="fetchPrescriptions(page + 1, userId)">
+        <button :disabled="page >= totalPages - 1" @click="fetchPrescriptions(page + 1)">
           Sonraki
         </button>
       </div>
     </div>
+
+    <!-- Randevu Al Butonu -->
+    <button
+      class="mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg"
+      @click="fetchAppointment">
+      Randevu Al
+    </button>
   </div>
 </template>
 
@@ -60,7 +63,12 @@ export default {
     };
   },
   methods: {
-    async fetchPrescriptions(page = 0, userId) {
+    fetchAppointment() {
+      this.$router.push("/appointments");
+    },
+
+    async fetchPrescriptions(page = 0) {
+      const userId = localStorage.getItem("userId");
       if (!userId) {
         this.error = "Kullanıcı bilgisi bulunamadı!";
         return;
@@ -72,10 +80,8 @@ export default {
       try {
         const token = localStorage.getItem("token");
 
-        const userId = localStorage.getItem("userId")
-
         const res = await axios.get("/api/v1/prescription/list/user", {
-            params: { userId, page, size: this.size},
+          params: { userId, page, size: this.size },
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -89,6 +95,7 @@ export default {
         this.loading = false;
       }
     },
+
     formatDate(dateStr) {
       return new Date(dateStr).toLocaleDateString("tr-TR", {
         year: "numeric",
@@ -103,7 +110,7 @@ export default {
     const storedUserId = localStorage.getItem("userId");
     if (storedUserId) {
       this.userId = Number(storedUserId);
-      this.fetchPrescriptions(0, this.userId); // sayfa yüklenince otomatik fetch
+      this.fetchPrescriptions(0); // sayfa yüklenince otomatik fetch
     } else {
       this.error = "Kullanıcı bilgisi bulunamadı!";
     }

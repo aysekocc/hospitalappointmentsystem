@@ -19,8 +19,8 @@ import java.util.UUID;
 public class CreateAppointment {
     private LocalDateTime startedDate;
     private LocalDateTime endedDate;
-    private String status;
-    private Long user;
     private Long doctor;
+    private Long user;
     private Long hospitalId;
+    private String status;
 }

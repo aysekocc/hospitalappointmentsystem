@@ -15,6 +15,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/hospital")
+@CrossOrigin(origins = "http://localhost:5198")
 @RequiredArgsConstructor
 public class HospitalController {
 

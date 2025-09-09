@@ -11,13 +11,12 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/prescription")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:5198")
 public class PrescriptionController {
     private final PrescriptionService prescriptionService;
 

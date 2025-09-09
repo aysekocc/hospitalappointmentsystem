@@ -4,38 +4,14 @@
 
     <!-- Randevu Formu -->
     <form @submit.prevent="createAppointment" class="space-y-3">
-      <input
-        type="datetime-local"
-        v-model="appointment.startedDate"
-        placeholder="Randevu Başlangıç Tarihi"
-        required
-        class="border p-2 w-full rounded" />
-      <input
-        type="datetime-local"
-        v-model="appointment.endedDate"
-        placeholder="Randevu Bitiş Tarihi"
-        required
-        class="border p-2 w-full rounded" />
-      <input
-        type="number"
-        v-model="appointment.doctor"
-        placeholder="Doktor ID"
-        required
-        class="border p-2 w-full rounded" />
-      <input
-        type="number"
-        v-model="appointment.user"
-        placeholder="Kullanıcı ID"
-        required
-        class="border p-2 w-full rounded" />
-      <input
-        type="number"
-        v-model="appointment.hospitalId"
-        placeholder="Hastane ID"
-        required
-        class="border p-2 w-full rounded" />
+      <input type="datetime-local" v-model="appointment.startedDate" required class="border p-2 w-full rounded" />
+      <input type="datetime-local" v-model="appointment.endedDate" required class="border p-2 w-full rounded" />
+      <input type="number" v-model="appointment.doctor" placeholder="Doktor ID" required class="border p-2 w-full rounded" />
+      <input type="number" v-model="appointment.user" placeholder="Kullanıcı ID" required class="border p-2 w-full rounded" />
+      <input type="number" v-model="appointment.hospitalId" placeholder="Hastane ID" required class="border p-2 w-full rounded" />
 
-      <select v-model="appointment.status" class="border p-2 w-full rounded">
+      <select v-model="appointment.status" required class="border p-2 w-full rounded">
+        <option value="">Durum Seçiniz</option>
         <option value="PENDING">Beklemede</option>
         <option value="CONFIRMED">Onaylandı</option>
         <option value="CANCELLED">İptal</option>
@@ -61,10 +37,10 @@
           <th class="border p-2">ID</th>
           <th class="border p-2">Başlangıç</th>
           <th class="border p-2">Bitiş</th>
-          <th class="border p-2">Durum</th>
           <th class="border p-2">Doktor</th>
           <th class="border p-2">Kullanıcı</th>
           <th class="border p-2">Hastane</th>
+          <th class="border p-2">Durum</th>
         </tr>
         </thead>
         <tbody>
@@ -72,10 +48,10 @@
           <td class="border p-2">{{ appt.id }}</td>
           <td class="border p-2">{{ formatDate(appt.startedDate) }}</td>
           <td class="border p-2">{{ formatDate(appt.endedDate) }}</td>
-          <td class="border p-2">{{ appt.status }}</td>
           <td class="border p-2">{{ appt.doctor?.id || appt.doctor }}</td>
           <td class="border p-2">{{ appt.user?.id || appt.user }}</td>
           <td class="border p-2">{{ appt.hospitalId?.id || appt.hospitalId }}</td>
+          <td class="border p-2">{{ appt.status }}</td>
         </tr>
         </tbody>
       </table>
@@ -84,7 +60,7 @@
 </template>
 
 <script>
-import axiosIns from "../plugins/axios";
+import axios from "axios";
 
 export default {
   data() {
@@ -92,10 +68,10 @@ export default {
       appointment: {
         startedDate: "",
         endedDate: "",
-        status: "PENDING",
         doctor: null,
         user: null,
         hospitalId: null,
+        status: "",
       },
       appointments: [],
       loading: false,
@@ -105,38 +81,67 @@ export default {
   },
   methods: {
     async createAppointment() {
+      if (
+        !this.appointment.startedDate ||
+        !this.appointment.endedDate ||
+        !this.appointment.doctor ||
+        !this.appointment.user ||
+        !this.appointment.hospitalId ||
+        !this.appointment.status
+      ) {
+        this.errorMessage = "Lütfen tüm alanları doldurun!";
+        this.successMessage = "";
+        return;
+      }
+
       try {
         const token = localStorage.getItem("token");
-        await axiosIns.post("/api/v1/appointment/create", this.appointment, {
+        if (!token) {
+          this.$router.push("/login");
+          return;
+        }
+
+        await axios.post("/api/v1/appointment/create", this.appointment, {
           headers: { Authorization: `Bearer ${token}` },
         });
+
         this.successMessage = "Randevu başarıyla oluşturuldu.";
         this.errorMessage = "";
 
-        // Formu temizle
         this.appointment = {
           startedDate: "",
           endedDate: "",
-          status: "PENDING",
           doctor: null,
           user: null,
           hospitalId: null,
+          status: "",
         };
-
-        this.fetchAppointments();
+        console.log(JSON.stringify(this.appointment))
+      //  await this.fetchAppointments();
       } catch (err) {
         console.error(err);
-        this.errorMessage = "Randevu oluşturulamadı.";
+        if (err.response?.status === 403) {
+          this.errorMessage = "Yetkisiz işlem! Lütfen giriş yapın.";
+          console.log(JSON.stringify(this.appointment))
+          this.$router.push("/login");
+        } else {
+          this.errorMessage = "Randevu oluşturulamadı.";
+        }
         this.successMessage = "";
       }
     },
-
+/*
     async fetchAppointments() {
       this.loading = true;
       this.errorMessage = "";
       try {
         const token = localStorage.getItem("token");
-        const res = await axiosIns.get("/api/v1/appointment?pageNumber=0&pageSize=10", {
+        if (!token) {
+          this.$router.push("/login");
+          return;
+        }
+
+        const res = await axios.get("/api/v1/appointment?pageNumber=0&pageSize=10", {
           headers: { Authorization: `Bearer ${token}` },
         });
         this.appointments = res.data.content;
@@ -147,13 +152,24 @@ export default {
         this.loading = false;
       }
     },
-
+*/
     formatDate(date) {
       return new Date(date).toLocaleString();
     },
   },
   mounted() {
-    this.fetchAppointments();
+    const token = localStorage.getItem("token");
+    const role = localStorage.getItem("role");
+    if (!token) {
+      this.$router.push("/login");
+      return;
+    }
+
+    if (role !== "ROLE_USER") {
+      this.$router.push("/login");
+    } else {
+     // this.fetchAppointments();
+    }
   },
 };
 </script>

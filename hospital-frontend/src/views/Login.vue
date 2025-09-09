@@ -38,6 +38,8 @@ export default {
         if(res.data.role==="ROLE_DOCTOR"){
           this.$router.push('/prescriptions');
         }else if(res.data.role==="ROLE_USER") {
+          console.log(res.data.token)
+          console.log(res.data.role)
           this.$router.push('/prescriptions-user');
         }
 

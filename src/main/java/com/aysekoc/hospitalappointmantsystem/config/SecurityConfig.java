@@ -65,7 +65,8 @@ public class SecurityConfig {
                 // Endpoint yetkilendirme
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/auth/register", "/api/v1/auth/login").permitAll()
-                        .requestMatchers("/api/v1/prescription/create").hasAuthority("ROLE_DOCTOR") // sadece doctor
+                        .requestMatchers("/api/v1/prescription/create").hasAuthority("ROLE_DOCTOR")
+                        .requestMatchers("/api/v1/appointment/**").hasAnyAuthority("ROLE_DOCTOR","ROLE_USER")// sadece doctor
                         .requestMatchers("/api/v1/prescription/**").authenticated() // diğer reçete endpointleri login olmalı
                         .anyRequest().authenticated()
                 )
