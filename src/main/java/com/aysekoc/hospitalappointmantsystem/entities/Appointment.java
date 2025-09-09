@@ -37,4 +37,8 @@ public class Appointment {
     @JoinColumn(name="doctor_id")
     private Doctor doctor;
 
+    @ManyToOne
+    @JoinColumn(name="hospital_id")
+    private Hospital hospitalId;
+
 }

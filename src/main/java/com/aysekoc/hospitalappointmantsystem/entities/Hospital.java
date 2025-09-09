@@ -35,6 +35,6 @@ public class Hospital {
     private String clinic;
 
     @OneToMany(mappedBy = "hospital")
-    private Set<Doctor> doctors;
+    private List<Doctor> doctors;
 
 }

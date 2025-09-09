@@ -1,6 +1,9 @@
 package com.aysekoc.hospitalappointmantsystem.services.concretes;
 
 import com.aysekoc.hospitalappointmantsystem.entities.Appointment;
+import com.aysekoc.hospitalappointmantsystem.entities.Doctor;
+import com.aysekoc.hospitalappointmantsystem.entities.Hospital;
+import com.aysekoc.hospitalappointmantsystem.entities.User;
 import com.aysekoc.hospitalappointmantsystem.repositories.AppointmentRepository;
 import com.aysekoc.hospitalappointmantsystem.services.abstracts.AppointmentService;
 import com.aysekoc.hospitalappointmantsystem.services.dtos.AppointmentDto.CreateAppointment;
@@ -17,7 +20,18 @@ import java.util.UUID;
 
 @Service
 public class AppointmentServiceImpl implements AppointmentService {
-    private AppointmentRepository appointmentRepository;
+    private final AppointmentRepository appointmentRepository;
+    private final DoctorServiceImpl doctorServiceImpl;
+    private final UserServiceImpl userServiceImpl;
+    private final HospitalServiceImpl hospitalServiceImpl;
+
+    public AppointmentServiceImpl(AppointmentRepository appointmentRepository, DoctorServiceImpl doctorServiceImpl, UserServiceImpl userServiceImpl, HospitalServiceImpl hospitalServiceImpl) {
+        this.appointmentRepository = appointmentRepository;
+        this.doctorServiceImpl = doctorServiceImpl;
+        this.userServiceImpl = userServiceImpl;
+        this.hospitalServiceImpl = hospitalServiceImpl;
+    }
+
 
     public Page<Appointment> getAppointments(int pageNumber, int pageSize) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
@@ -25,12 +39,20 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public void createAppointment(CreateAppointment createAppointment) {
+    public String  createAppointment(CreateAppointment createAppointment) {
         Appointment appointment = new Appointment();
-        appointment.setId(createAppointment.getId());
+        Doctor doctor = doctorServiceImpl.findById(createAppointment.getDoctor()).orElseThrow();
+        appointment.setDoctor(doctor);
+        User user = userServiceImpl.findById(createAppointment.getUser()).orElseThrow();
+        appointment.setUser(user);
+        Hospital host = hospitalServiceImpl.findById(createAppointment.getHospitalId());
+        if(host==null) return "böyle bir hastane  yok ";
+        appointment.setHospitalId(host);
+        appointment.setStatus(createAppointment.getStatus());
         appointment.setStartedDate(createAppointment.getStartedDate());
         appointment.setEndedDate(createAppointment.getEndedDate());
         appointmentRepository.save(appointment);
+        return  "Created";
     }
 
     @Override

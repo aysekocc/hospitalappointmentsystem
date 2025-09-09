@@ -14,4 +14,6 @@ public class CreateHospital {
     private String name;
     private String town;
     private String township;
+    private String clinic;
+    private List<Long> doctorsId;
 }

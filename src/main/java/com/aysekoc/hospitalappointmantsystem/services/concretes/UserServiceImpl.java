@@ -19,7 +19,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-
+    private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtToken jwtToken;
@@ -42,6 +42,7 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
+
     @Override
     public String login(UserLoginRequest req) {
         Optional<User> user = userRepository.findByUsername(req.getUsername());
@@ -63,7 +64,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> findByName(String name) {
         List<User> user = userRepository.findByName(name);
-        if(user.isEmpty()){
+        if (user.isEmpty()) {
             throw new NullPointerException("User not found");
         }
         return user;
@@ -91,8 +92,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteById(Long id) {
         Optional<User> optionalCustomer = userRepository.findById(id);
-        if (optionalCustomer.isEmpty()){
-            throw  new NullPointerException();
+        if (optionalCustomer.isEmpty()) {
+            throw new NullPointerException();
         }
         userRepository.deleteById(id);
     }

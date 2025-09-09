@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -48,5 +49,9 @@ public class DoctorServiceImpl implements DoctorService {
     public List<Doctor> findAll() {
         List<Doctor> doctor = doctorRepository.findAll();
         return doctor;
+    }
+    @Override
+    public Optional<Doctor> findById(Long id){
+       return doctorRepository.findById(id);
     }
 }
