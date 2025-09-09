@@ -12,9 +12,10 @@ public interface HospitalService {
 
     void createByHospital(CreateHospital createHospital);
     List<Hospital> findByHospitalName(CreateHospital createHospital);
-    Hospital updateHospital(UUID id, CreateHospital createHospital);
+    Hospital updateHospital(Long id, CreateHospital createHospital);
     Page<Hospital> getHospitals(int pageNumber, int pageSize);
-    void deleteByHospital(UUID id);
+    void deleteByHospital(Long id);
+    Hospital findById(Long Id);
 
 
 }

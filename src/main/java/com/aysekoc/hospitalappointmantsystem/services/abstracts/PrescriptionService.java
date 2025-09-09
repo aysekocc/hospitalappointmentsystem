@@ -1,6 +1,8 @@
 package com.aysekoc.hospitalappointmantsystem.services.abstracts;
 
 import com.aysekoc.hospitalappointmantsystem.entities.Prescription;
+import com.aysekoc.hospitalappointmantsystem.services.dtos.PrescriptionDto.CreatePrescription;
+import com.aysekoc.hospitalappointmantsystem.services.dtos.PrescriptionDto.PrescriptionListDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -10,10 +12,10 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface PrescriptionService {
-    void create (Prescription prescription);
+    void create (CreatePrescription createPrescription);
     List<Prescription> findByDate(LocalDateTime date);
-    void deleteById (UUID id);
-    Optional<Prescription> findByHashPrescription(Prescription prescription);
-    Page<Prescription> findByUserId(UUID userId, Pageable pageable);
+    void deleteById (Long id);
+    Optional<Prescription> findByHashPrescription(String hash);
+    Page<PrescriptionListDto> findById(Long id, Pageable pageable);
 
 }

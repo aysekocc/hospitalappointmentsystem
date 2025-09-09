@@ -8,12 +8,13 @@ import com.aysekoc.hospitalappointmantsystem.services.abstracts.UserService;
 import com.aysekoc.hospitalappointmantsystem.services.dtos.UserDto.CreateUserRequest;
 import com.aysekoc.hospitalappointmantsystem.services.dtos.UserDto.UserLoginRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -51,7 +52,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> findById(UUID id) {
+    public Optional<User> findById(Long id) {
         Optional<User> user = userRepository.findById(id);
         if (user.isEmpty()) {
             throw new NullPointerException("User not found!");
@@ -60,12 +61,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> findByname(String name) {
+    public List<User> findByName(String name) {
         List<User> user = userRepository.findByName(name);
         if(user.isEmpty()){
             throw new NullPointerException("User not found");
         }
         return user;
+    }
+
+    @Override
+    public Optional<User> findByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 
     @Override
@@ -83,7 +89,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteById(UUID id) {
+    public void deleteById(Long id) {
         Optional<User> optionalCustomer = userRepository.findById(id);
         if (optionalCustomer.isEmpty()){
             throw  new NullPointerException();

@@ -5,9 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.UuidGenerator;
+
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Entity
 @Table(name="prescriptions")
@@ -18,9 +17,9 @@ import java.util.UUID;
 public class Prescription {
 
     @Id
-    @UuidGenerator
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private UUID id;
+    @Column(name="prescription_id")
+    private Long id;
 
     @Column(name="medicine_name")
     private String medicineName;
@@ -33,6 +32,7 @@ public class Prescription {
 
     @Column(name="hash_prescription")
     private String hashPrescription;
+
 
     @ManyToOne
     @JoinColumn(name="user_id")

@@ -18,20 +18,32 @@ export default {
     return {
       username: '',
       password: '',
-      message: ''
+      message: '',
+      userId: null
     };
   },
   methods: {
     async login() {
       try {
-        const res = await axios.post('http://localhost:8082/api/v1/auth/login', {
+        const res = await axios.post('/api/v1/auth/login', {   // path’i backend’e göre güncelle
           username: this.username,
           password: this.password
         });
-        localStorage.setItem('token', res.data);
+
+        localStorage.setItem('token', res.data.token);
+        localStorage.setItem('role', res.data.role);
+        localStorage.setItem('userId', res.data.userId);
+
         this.message = 'Login successful!';
+        if(res.data.role==="ROLE_DOCTOR"){
+          this.$router.push('/prescriptions');
+        }else if(res.data.role==="ROLE_USER") {
+          this.$router.push('/prescriptions-user');
+        }
+
       } catch (err) {
-        this.message = 'Login failed!';
+        console.error(err);
+        this.message = err.response?.data?.message || 'Login failed!';
       }
     }
   }

@@ -1,5 +1,6 @@
 package com.aysekoc.hospitalappointmantsystem.services.concretes;
 
+import com.aysekoc.hospitalappointmantsystem.entities.Doctor;
 import com.aysekoc.hospitalappointmantsystem.entities.Hospital;
 import com.aysekoc.hospitalappointmantsystem.repositories.HospitalRepository;
 import com.aysekoc.hospitalappointmantsystem.services.abstracts.HospitalService;
@@ -10,6 +11,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,6 +22,7 @@ public class HospitalServiceImpl implements HospitalService {
 
     @Autowired
     private final HospitalRepository hospitalRepository;
+    private final DoctorServiceImpl doctorService;
 
 
     @Override
@@ -30,10 +34,16 @@ public class HospitalServiceImpl implements HospitalService {
     @Override
     public void createByHospital(CreateHospital createHospital) {
         Hospital hospital = new Hospital();
-        hospital.setId(createHospital.getId());
+        List<Doctor> dc = new ArrayList<>();
+        for (int i = 0; i < createHospital.getDoctorsId().size(); i++) {
+            dc.add(doctorService.findById(createHospital.getDoctorsId().get(i)).get());
+        }
+        hospital.setDoctors(dc);
         hospital.setName(createHospital.getName());
         hospital.setTown(createHospital.getTown());
         hospital.setTownship(createHospital.getTownship());
+        hospital.setClinic(createHospital.getClinic());
+
         hospitalRepository.save(hospital);
     }
 
@@ -47,24 +57,27 @@ public class HospitalServiceImpl implements HospitalService {
     }
 
     @Override
-    public Hospital updateHospital(UUID id, CreateHospital createHospital) {
-        Hospital existing = hospitalRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Hospital not found with id: " + id));
+    public Hospital updateHospital(Long appointmentId, CreateHospital createHospital) {
+        Hospital existing = hospitalRepository.findById(appointmentId)
+                .orElseThrow(() -> new RuntimeException("Hospital not found with id: " + appointmentId));
+
         existing.setName(createHospital.getName());
         existing.setTown(createHospital.getTown());
         existing.setTownship(createHospital.getTownship());
+
         return hospitalRepository.save(existing);
     }
 
 
-
     @Override
-    public void deleteByHospital(UUID id) {
-        hospitalRepository.deleteById(id);
+    public void deleteByHospital(Long appointmentId) {
+        hospitalRepository.deleteById(appointmentId);
 
     }
-
-
+    @Override
+     public  Hospital findById(Long Id){
+      return   hospitalRepository.findById(Id).orElseThrow(() -> new RuntimeException("Hospital not found"));
+    }
 
 
 }

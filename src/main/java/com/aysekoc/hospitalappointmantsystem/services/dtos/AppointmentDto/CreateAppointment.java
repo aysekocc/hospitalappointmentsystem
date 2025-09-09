@@ -1,8 +1,12 @@
 package com.aysekoc.hospitalappointmantsystem.services.dtos.AppointmentDto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.aysekoc.hospitalappointmantsystem.entities.Doctor;
+import com.aysekoc.hospitalappointmantsystem.entities.Hospital;
+import com.aysekoc.hospitalappointmantsystem.entities.User;
+import jakarta.persistence.Column;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -10,10 +14,13 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 public class CreateAppointment {
-
-    private UUID id;
     private LocalDateTime startedDate;
     private LocalDateTime endedDate;
-
+    private String status;
+    private Long user;
+    private Long doctor;
+    private Long hospitalId;
 }

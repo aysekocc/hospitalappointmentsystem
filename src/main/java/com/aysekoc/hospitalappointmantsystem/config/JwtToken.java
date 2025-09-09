@@ -13,7 +13,6 @@ import java.util.Date;
 public class JwtToken {
     private final String SECRET_KEY = "supersecretkeysupersecretkey12345"; // 256-bit
     private final long EXPIRATION_TIME = 1000 * 60 * 60; // 1 saat
-
     private final Key key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
 
     public String generateToken(String username, String role) {

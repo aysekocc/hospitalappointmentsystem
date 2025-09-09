@@ -17,27 +17,29 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
+
 
 @RestController
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:5181")
+@CrossOrigin(origins = "http://localhost:5198")
 public class UserController {
-
 
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
     private final JwtToken jwtToken;
 
-
     @PostMapping("/register")
-    public void register(@RequestBody CreateUserRequest req) {
-        userService.register(req);
+    public ResponseEntity<Map<String, String>> register(@RequestBody CreateUserRequest createUserRequest) {
+        userService.register(createUserRequest);
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "User registered successfully");
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
-
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserLoginRequest request) {
@@ -60,7 +62,7 @@ public class UserController {
             String token = jwtToken.generateToken(request.getUsername(), role);
 
             // Token'ı response olarak döndür
-            return ResponseEntity.ok(new LoginResponse(token, role));
+            return ResponseEntity.ok(new LoginResponse(token, role, "İşlem Başarılı", userService.findByUsername(request.getUsername()).get().getId()));
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -70,37 +72,35 @@ public class UserController {
     }
 
 
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/list/id")
-    public Optional<User> findById(@RequestParam UUID id) {
-        return userService.findById(id);
+    public ResponseEntity<Optional<User>> findById(@RequestParam Long id) {
+        return ResponseEntity.ok(userService.findById(id));
     }
 
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/list/name")
-    public List<User> findByName(@RequestParam String name) {
-        return userService.findByname(name);
+    public ResponseEntity<List<User>> findByName(@RequestParam String name) {
+        return ResponseEntity.ok(userService.findByName(name));
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN','DOCTOR')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_DOCTOR')")
     @PutMapping("/updateUser")
     public ResponseEntity<Void> updateUser(@RequestBody User user) {
         userService.updateUser(user);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN','DOCTOR','USER')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_DOCTOR','ROLE_USER')")
     @GetMapping("/userAll")
     public ResponseEntity<List<User>> findUserAll() {
-        List<User> userAll = userService.findAll();
-        return new ResponseEntity<>(userAll, HttpStatus.OK);
+        return ResponseEntity.ok(userService.findAll());
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN','DOCTOR')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_DOCTOR')")
     @DeleteMapping("/deleteUser/{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable UUID id) {
+    public ResponseEntity<Void> deleteById(@PathVariable Long id) {
         userService.deleteById(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
-
 }

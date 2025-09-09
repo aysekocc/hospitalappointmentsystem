@@ -5,10 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.UuidGenerator;
 
 import java.util.Set;
-import java.util.UUID;
 
 
 @Entity
@@ -21,9 +19,8 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @UuidGenerator
-    @Column(name = "id")
-    private UUID id;
+    @Column(name="user_id")
+    private Long id;
 
     @Column(name="identity" , unique = true, length=11)
     private String identity;

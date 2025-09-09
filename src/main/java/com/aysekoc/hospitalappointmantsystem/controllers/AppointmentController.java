@@ -2,9 +2,12 @@ package com.aysekoc.hospitalappointmantsystem.controllers;
 import com.aysekoc.hospitalappointmantsystem.entities.Appointment;
 import com.aysekoc.hospitalappointmantsystem.services.abstracts.AppointmentService;
 import com.aysekoc.hospitalappointmantsystem.services.dtos.AppointmentDto.CreateAppointment;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -14,47 +17,48 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/appointment")
-
+@RequiredArgsConstructor
 public class AppointmentController {
 
-    @Autowired
-    private AppointmentService appointmentService;
+    private final AppointmentService appointmentService;
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/create")
-    public void createAppointment(@RequestBody CreateAppointment createAppointment){
+    public ResponseEntity<Void> createAppointment(@RequestBody CreateAppointment createAppointment) {
         appointmentService.createAppointment(createAppointment);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_DOCTOR')")
     @GetMapping
     public ResponseEntity<Page<Appointment>> getAppointments(
             @RequestParam(defaultValue = "0") int pageNumber,
             @RequestParam(defaultValue = "10") int pageSize) {
-        Page<Appointment> appointments = appointmentService.getAppointments(pageNumber, pageSize);
-        return ResponseEntity.ok(appointments);
+        return ResponseEntity.ok(appointmentService.getAppointments(pageNumber, pageSize));
     }
 
-
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_DOCTOR')")
     @GetMapping("/list/id")
-    public Optional<Appointment> findById(UUID id){
-        return appointmentService.findById(id);
+    public ResponseEntity<Optional<Appointment>> findById(@RequestParam Long appointmentId) {
+        return ResponseEntity.ok(appointmentService.findById(appointmentId));
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_DOCTOR')")
     @GetMapping("/list/startdate")
-    public List<Appointment> findByStartDate(LocalDateTime startDate){
-        return appointmentService.findByStartDate(startDate);
+    public ResponseEntity<List<Appointment>> findByStartDate(@RequestParam LocalDateTime startDate) {
+        return ResponseEntity.ok(appointmentService.findByStartDate(startDate));
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_DOCTOR')")
     @GetMapping("/list/enddate")
-    public List<Appointment> findByEndDate(LocalDateTime endDate){
-        return appointmentService.findByEndDate(endDate);
+    public ResponseEntity<List<Appointment>> findByEndDate(@RequestParam LocalDateTime endDate) {
+        return ResponseEntity.ok(appointmentService.findByEndDate(endDate));
     }
 
-    @DeleteMapping()
-    public void deleteAppointment(UUID id){
-        appointmentService.deleteAppointment(id);
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @DeleteMapping("/{appointmentId}")
+    public ResponseEntity<Void> deleteAppointment(@PathVariable Long appointmentId) {
+        appointmentService.deleteAppointment(appointmentId);
+        return ResponseEntity.ok().build();
     }
-
-
-
-
 }

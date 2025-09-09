@@ -11,10 +11,10 @@ import java.util.List;
 import java.util.UUID;
 
 @Repository
-public interface HospitalRepository extends JpaRepository<Hospital, UUID> {
+public interface HospitalRepository extends JpaRepository<Hospital, Long> {
 
     List<Hospital> findByName(CreateHospital createHospital);
-    void deleteById(UUID id);
+    void deleteById(Long id);
 
 
 }

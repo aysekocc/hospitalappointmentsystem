@@ -14,9 +14,9 @@ public interface AppointmentService {
 
     Page<Appointment> getAppointments(int pageNumber, int pageSize);
 
-    void createAppointment(CreateAppointment createAppointment);
-    void deleteAppointment(UUID id);
-    Optional<Appointment> findById(UUID id);
+    String createAppointment(CreateAppointment createAppointment);
+    void deleteAppointment(Long id);
+    Optional<Appointment> findById(Long id);
     List<Appointment> findByStartDate(LocalDateTime startDate);
     List<Appointment> findByEndDate(LocalDateTime endDate);
 

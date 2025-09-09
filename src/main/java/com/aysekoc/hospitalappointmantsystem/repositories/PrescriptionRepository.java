@@ -8,13 +8,15 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface PrescriptionRepository extends JpaRepository<Prescription, UUID> {
+public interface PrescriptionRepository extends JpaRepository<Prescription, Long> {
 
     List<Prescription> findByDate(LocalDateTime date);
-    Page<Prescription> findByUserId(UUID userId, Pageable pageable);
+    Page<Prescription> findByUserId(Long id, Pageable pageable);
+    Optional<Prescription> findByHashPrescription(String hash);
     List<Prescription> findByDateBetween(LocalDateTime startDate, LocalDateTime endDate);
 
 }

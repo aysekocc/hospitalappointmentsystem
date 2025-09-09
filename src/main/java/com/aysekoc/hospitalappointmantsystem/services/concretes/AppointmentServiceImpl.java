@@ -34,9 +34,9 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public Optional<Appointment> findById(UUID id) {
-        Optional<Appointment> appointment = appointmentRepository.findById(id);
-        if (appointment.isEmpty()){
+    public Optional<Appointment> findById(Long appointmetnId) {
+        Optional<Appointment> appointment = appointmentRepository.findById(appointmetnId);
+        if (appointment.isEmpty()) {
             throw new RuntimeException("Appointment not found");
         }
         return appointment;
@@ -55,8 +55,8 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public void deleteAppointment(UUID id) {
-        appointmentRepository.deleteById(id);
+    public void deleteAppointment(Long appointmetnId) {
+        appointmentRepository.deleteById(appointmetnId);
 
     }
 }

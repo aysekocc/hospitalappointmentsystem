@@ -8,14 +8,14 @@ import java.util.List;
 import java.util.UUID;
 
 @Repository
-public interface DoctorRepository extends JpaRepository<Doctor, UUID> {
+public interface DoctorRepository extends JpaRepository<Doctor, Long> {
 
     List<Doctor> findByHospital_Name(String hospitalName);
     List<Doctor> findByName(String name);
     List<Doctor> findBySpecialty(String specialty);
     List<Doctor> findByTitle(String title);
     List<Doctor> findByGender(boolean gender);  // true/false
-    List<Doctor> findByHospital_Id(UUID hospitalId);
+    List<Doctor> findByHospitalId(Long id);
 
 
 

@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CreateUserRequest {
 
-
     private String identity;
     private String name;
     private String surname;
@@ -19,6 +18,4 @@ public class CreateUserRequest {
     private String username;
     private String password;
     private String role;
-
-
 }

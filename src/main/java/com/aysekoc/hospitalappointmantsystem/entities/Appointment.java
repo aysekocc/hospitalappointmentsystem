@@ -5,9 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.UuidGenerator;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Entity
 @Table(name="appointments")
@@ -16,10 +14,11 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Appointment {
+
     @Id
-    @UuidGenerator
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private UUID id;
+    @Column(name="appointment_id")
+    private Long id;
 
     @Column(name="started_date")
     private LocalDateTime startedDate;
