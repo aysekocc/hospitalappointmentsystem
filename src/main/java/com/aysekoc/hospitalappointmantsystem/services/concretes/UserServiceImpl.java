@@ -1,7 +1,6 @@
 package com.aysekoc.hospitalappointmantsystem.services.concretes;
 
 import com.aysekoc.hospitalappointmantsystem.config.JwtToken;
-import com.aysekoc.hospitalappointmantsystem.entities.Roles;
 import com.aysekoc.hospitalappointmantsystem.entities.User;
 import com.aysekoc.hospitalappointmantsystem.repositories.UserRepository;
 import com.aysekoc.hospitalappointmantsystem.services.abstracts.UserService;

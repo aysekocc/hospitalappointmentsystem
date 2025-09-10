@@ -42,8 +42,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
             if (jwtToken.isTokenValid(token, userDetails.getUsername())) {
-                // JWT içindeki role al
-                String role = jwtToken.extractRole(token); // yeni method
+
+                String role = jwtToken.extractRole(token);
                 List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(role));
 
                 UsernamePasswordAuthenticationToken authToken =

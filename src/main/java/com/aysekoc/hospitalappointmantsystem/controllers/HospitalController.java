@@ -4,6 +4,7 @@ package com.aysekoc.hospitalappointmantsystem.controllers;
 import com.aysekoc.hospitalappointmantsystem.entities.Hospital;
 import com.aysekoc.hospitalappointmantsystem.services.abstracts.HospitalService;
 import com.aysekoc.hospitalappointmantsystem.services.dtos.HospitalDto.CreateHospital;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,36 +23,36 @@ public class HospitalController {
     @Autowired
     private final HospitalService hospitalService;
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_DOCTOR')")
     @PostMapping("/create")
-    public void createByHospital(@RequestBody CreateHospital createHospital){
+    public void createByHospital(@Valid  @RequestBody CreateHospital createHospital){
         hospitalService.createByHospital(createHospital);
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_DOCTOR','ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_DOCTOR','ROLE_USER')")
     @GetMapping("/list/name")
-    public List<Hospital> findByHospitalName(@RequestParam CreateHospital createHospital){
+    public List<Hospital> findByHospitalName(@Valid @RequestParam CreateHospital createHospital){
         return hospitalService.findByHospitalName(createHospital);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_DOCTOR')")
     @PutMapping("/update/hospital")
-    public void updateByHospital(@RequestBody CreateHospital createHospital, @RequestParam Long id){
+    public void updateByHospital(@Valid @RequestBody CreateHospital createHospital, @RequestParam Long id){
         hospitalService.updateHospital(id,createHospital);
     }
 
 
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_DOCTOR','ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_DOCTOR','ROLE_USER')")
     @GetMapping("/list/Allhospital")
-    public ResponseEntity<Page<Hospital>> getHospitals(@RequestParam(defaultValue = "0") int pageNumber, @RequestParam(defaultValue = "10") int pageSize){
+    public ResponseEntity<Page<Hospital>> getHospitals(@Valid @RequestParam(defaultValue = "0") int pageNumber, @RequestParam(defaultValue = "10") int pageSize){
         Page<Hospital> hospitals = hospitalService.getHospitals(pageNumber, pageSize);
         return ResponseEntity.ok(hospitals);
     }
 
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_DOCTOR')")
     @DeleteMapping
-    public void deleteByHospital(@RequestParam Long id){
+    public void deleteByHospital(@Valid @RequestParam Long id){
         hospitalService.deleteByHospital(id);
     }
 

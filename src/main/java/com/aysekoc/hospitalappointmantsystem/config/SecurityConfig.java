@@ -49,7 +49,6 @@ public class SecurityConfig {
                                            DaoAuthenticationProvider daoAuthenticationProvider) throws Exception {
 
         http
-                // CORS ve CSRF
                 .cors(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
 

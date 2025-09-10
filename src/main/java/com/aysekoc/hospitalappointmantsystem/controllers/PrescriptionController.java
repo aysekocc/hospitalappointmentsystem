@@ -4,13 +4,13 @@ package com.aysekoc.hospitalappointmantsystem.controllers;
 import com.aysekoc.hospitalappointmantsystem.entities.Prescription;
 import com.aysekoc.hospitalappointmantsystem.services.abstracts.PrescriptionService;
 import com.aysekoc.hospitalappointmantsystem.services.dtos.PrescriptionDto.PrescriptionListDto;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 @RestController
@@ -30,13 +30,13 @@ public class PrescriptionController {
 
     @PreAuthorize("hasRole('ROLE_DOCTOR')")
     @GetMapping("/list/hash")
-    public Optional<Prescription> findByHashPrescription(@RequestParam String hash) {
+    public Optional<Prescription> findByHashPrescription(@Valid @RequestParam String hash) {
         return prescriptionService.findByHashPrescription(hash);
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_DOCTOR','ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_DOCTOR','ROLE_USER')")
     @GetMapping("/list/user")
-    public Page<PrescriptionListDto> findById(@RequestParam Long userId, Pageable pageable) {
+    public Page<PrescriptionListDto> findById(@Valid @RequestParam Long userId, Pageable pageable) {
         return prescriptionService.findById(userId, pageable);
     }
 

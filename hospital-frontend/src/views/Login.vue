@@ -32,7 +32,7 @@ export default {
 
         localStorage.setItem("token", res.data.token);
 
-        // Eğer backend ayrıca rol döndürüyorsa onu da sakla:
+
         localStorage.setItem("role", res.data.role);
 
 

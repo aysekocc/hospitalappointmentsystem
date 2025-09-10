@@ -43,9 +43,9 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody UserLoginRequest request) {
+    public ResponseEntity<?> login(@Valid @RequestBody UserLoginRequest request) {
         try {
-            // Kullanıcı adı ve şifreyi doğrula
+
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             request.getUsername(),
@@ -53,16 +53,16 @@ public class UserController {
                     )
             );
 
-            // Doğruysa rol bilgisini al
+
             String role = authentication.getAuthorities()
                     .iterator()
                     .next()
                     .getAuthority();
 
-            // Token üret
+
             String token = jwtToken.generateToken(request.getUsername(), role);
 
-            // Token'ı response olarak döndür
+
             return ResponseEntity.ok(new LoginResponse(token, role, "İşlem Başarılı", userService.findByUsername(request.getUsername()).get().getId()));
 
         } catch (Exception e) {
@@ -85,20 +85,20 @@ public class UserController {
         return ResponseEntity.ok(userService.findByName(name));
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_DOCTOR')")
+    @PreAuthorize("hasRole('ROLE_DOCTOR')")
     @PutMapping("/updateUser")
     public ResponseEntity<Void> updateUser(@RequestBody User user) {
         userService.updateUser(user);
         return ResponseEntity.ok().build();
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_DOCTOR','ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_DOCTOR','ROLE_USER')")
     @GetMapping("/userAll")
     public ResponseEntity<List<User>> findUserAll() {
         return ResponseEntity.ok(userService.findAll());
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_DOCTOR')")
+    @PreAuthorize("hasRole('ROLE_DOCTOR')")
     @DeleteMapping("/deleteUser/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable Long id) {
         userService.deleteById(id);

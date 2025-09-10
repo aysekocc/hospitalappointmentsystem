@@ -2,7 +2,6 @@
   <div class="p-6 max-w-lg mx-auto">
     <h2 class="text-2xl mb-4 font-semibold">Reçete Oluştur</h2>
 
-    <!-- Reçete Formu -->
     <form @submit.prevent="createPrescription" class="space-y-3">
       <input
         v-model="prescription.medicineName"
@@ -31,11 +30,9 @@
       </button>
     </form>
 
-    <!-- Mesajlar -->
     <p class="mt-4 text-green-600" v-if="successMessage">{{ successMessage }}</p>
     <p class="mt-4 text-red-600" v-if="errorMessage">{{ errorMessage }}</p>
 
-    <!-- Reçete Silme -->
     <div class="mt-8">
       <h3 class="text-xl mb-2">Reçete Sil</h3>
       <input

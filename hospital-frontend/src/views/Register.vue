@@ -64,10 +64,10 @@ export default {
           }
         );
 
-        // Başarılı kayıt
+
         this.message = 'Registration successful!';
       } catch (err) {
-        // Backend’in verdiği hatayı console’a yaz
+
         console.error(err.response?.data);
         this.message = 'Registration failed! ' + (err.response?.data?.message || '');
       }

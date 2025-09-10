@@ -2,7 +2,6 @@
   <div class="p-6 max-w-3xl mx-auto">
     <h2 class="text-2xl font-semibold mb-4">Reçete Listesi</h2>
 
-    <!-- Hash ile reçete arama -->
     <div class="mb-6 flex gap-2">
       <input
         v-model="hash"
@@ -17,14 +16,13 @@
       </button>
     </div>
 
-    <!-- Hash arama sonucu -->
     <div v-if="hashPrescription" class="border p-3 mb-6 bg-gray-100 rounded">
       <h3 class="font-semibold mb-2">Hash ile bulunan reçete</h3>
       <p><strong>İlaç:</strong> {{ hashPrescription.medicineName }}</p>
       <p><strong>Teşhis:</strong> {{ hashPrescription.diagnosis }}</p>
     </div>
 
-    <!-- Kullanıcıya göre reçete listesi -->
+
     <div class="mb-4">
       <label class="block mb-1">Kullanıcı ID:</label>
       <input
@@ -41,7 +39,7 @@
       </button>
     </div>
 
-    <!-- Reçeteler tablosu -->
+
     <div v-if="prescriptions.length > 0">
       <table class="w-full border-collapse border">
         <thead>
@@ -69,7 +67,7 @@
         </tbody>
       </table>
 
-      <!-- Sayfalama -->
+
       <div class="flex justify-between items-center mt-4">
         <button
           :disabled="page === 0"

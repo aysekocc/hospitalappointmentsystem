@@ -3,7 +3,6 @@
   <div class="p-6 max-w-lg mx-auto">
     <h2 class="text-2xl mb-4 font-semibold">Randevu İşlemleri</h2>
 
-    <!-- Randevu Formu -->
     <form @submit.prevent="createAppointment" class="space-y-3">
       <input type="datetime-local" v-model="appointment.startedDate" required class="border p-2 w-full rounded" />
       <input type="datetime-local" v-model="appointment.endedDate" required class="border p-2 w-full rounded" />
@@ -23,11 +22,9 @@
       </button>
     </form>
 
-    <!-- Mesajlar -->
     <p class="mt-4 text-green-600" v-if="successMessage">{{ successMessage }}</p>
     <p class="mt-4 text-red-600" v-if="errorMessage">{{ errorMessage }}</p>
 
-    <!-- Buton: geçmiş randevulara git -->
     <div class="mt-6">
       <button @click="$router.push('/appointments/my-appointments')"
               class="bg-gray-600 text-white px-4 py-2 rounded-lg">

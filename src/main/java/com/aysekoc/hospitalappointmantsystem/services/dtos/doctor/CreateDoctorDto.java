@@ -1,6 +1,5 @@
 package com.aysekoc.hospitalappointmantsystem.services.dtos.doctor;
 
-
 import lombok.*;
 
 @Getter

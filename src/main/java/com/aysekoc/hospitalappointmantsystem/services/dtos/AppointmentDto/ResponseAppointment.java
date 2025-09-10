@@ -14,7 +14,7 @@ public class ResponseAppointment {
     private LocalDateTime startedDate;
     private LocalDateTime endedDate;
     private String status;
-    private Long user; // user.name + user.surname
-    private String doctorName;  // doctor.name + doctor.surname
+    private Long user;
+    private String doctorName;
 
 }

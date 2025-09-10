@@ -2,7 +2,6 @@ package com.aysekoc.hospitalappointmantsystem.repositories;
 
 import com.aysekoc.hospitalappointmantsystem.entities.Appointment;
 import com.aysekoc.hospitalappointmantsystem.entities.User;
-import com.aysekoc.hospitalappointmantsystem.services.dtos.AppointmentDto.AppointmentListDoctorDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

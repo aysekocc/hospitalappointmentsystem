@@ -15,33 +15,33 @@ import java.util.List;
 public class DoctorController {
     private final DoctorService doctorService;
 
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_DOCTOR')")
+    @PreAuthorize("hasRole('ROLE_DOCTOR')")
     @PostMapping("/create")
     public void createByHospital(@RequestBody Doctor doctor) {
         doctorService.save(doctor);
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_DOCTOR','ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_DOCTOR','ROLE_USER')")
     @GetMapping("/list/name")
-    public List<DoctorListDto> findByHospitalName(String name) {
+    public List<DoctorListDto> findByHospitalName(@Valid String name) {
         return doctorService.findByName(name);
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_DOCTOR','ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_DOCTOR','ROLE_USER')")
     @GetMapping("/list/title")
-    public List<DoctorListDto> findByTitle(String title) {
+    public List<DoctorListDto> findByTitle(@Valid String title) {
         return doctorService.findByTitle(title);
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_DOCTOR','ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_DOCTOR','ROLE_USER')")
     @GetMapping("/list/gender")
-    public List<DoctorListDto> findByGender(boolean gender) {
+    public List<DoctorListDto> findByGender(@Valid boolean gender) {
         return doctorService.findByGender(gender);
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_DOCTOR','ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_DOCTOR','ROLE_USER')")
     @GetMapping("/list")
-    public Page<DoctorListDto> findAll(@RequestParam(defaultValue = "5") int size,
+    public Page<DoctorListDto> findAll(@Valid @RequestParam(defaultValue = "5") int size,
                                        @RequestParam(defaultValue = "0") int page) {
         return doctorService.findAll(size, page);
     }

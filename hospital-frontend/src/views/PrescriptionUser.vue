@@ -20,7 +20,7 @@
           <td class="border px-2">{{ p.id }}</td>
           <td class="border px-2">{{ p.medicineName }}</td>
           <td class="border px-2">{{ p.diagnosis }}</td>
-          <td class="border px-2">{{ formatDate(p.createdAt) }}</td>
+          <td class="border px-2">{{ formatDate(p.date) }}</td>
           <td class="border px-2">{{ p.hashPrescription }}</td>
         </tr>
         </tbody>
@@ -37,7 +37,7 @@
       </div>
     </div>
 
-    <!-- Randevu Al Butonu -->
+
     <button
       class="mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg"
       @click="fetchAppointment">
@@ -59,7 +59,7 @@ export default {
       page: 0,
       size: 2,
       totalPages: 0,
-      userId: null, // localStorage'dan alınacak
+      userId: null,
     };
   },
   methods: {
@@ -110,7 +110,7 @@ export default {
     const storedUserId = localStorage.getItem("userId");
     if (storedUserId) {
       this.userId = Number(storedUserId);
-      this.fetchPrescriptions(0); // sayfa yüklenince otomatik fetch
+      this.fetchPrescriptions(0);
     } else {
       this.error = "Kullanıcı bilgisi bulunamadı!";
     }
