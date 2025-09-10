@@ -10,7 +10,7 @@ import java.util.UUID;
 @Repository
 public interface DoctorRepository extends JpaRepository<Doctor, Long> {
 
-    List<Doctor> findByHospital_Name(String hospitalName);
+    List<Doctor> findByHospitalName(String name);
     List<Doctor> findByName(String name);
     List<Doctor> findBySpecialty(String specialty);
     List<Doctor> findByTitle(String title);

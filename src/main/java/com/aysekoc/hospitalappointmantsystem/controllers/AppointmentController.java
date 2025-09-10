@@ -1,19 +1,20 @@
 package com.aysekoc.hospitalappointmantsystem.controllers;
 import com.aysekoc.hospitalappointmantsystem.entities.Appointment;
 import com.aysekoc.hospitalappointmantsystem.services.abstracts.AppointmentService;
+import com.aysekoc.hospitalappointmantsystem.services.dtos.AppointmentDto.AppointmentListDoctorDto;
+import com.aysekoc.hospitalappointmantsystem.services.dtos.AppointmentDto.AppointmentListUserDto;
 import com.aysekoc.hospitalappointmantsystem.services.dtos.AppointmentDto.CreateAppointment;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/appointment")
@@ -23,14 +24,14 @@ public class AppointmentController {
 
     private final AppointmentService appointmentService;
 
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_DOCTOR', 'ROLE_ADMIN')")
     @PostMapping("/create")
     public ResponseEntity<Void> createAppointment(@RequestBody CreateAppointment createAppointment) {
         appointmentService.createAppointment(createAppointment);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_DOCTOR')")
+    @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_DOCTOR', 'ROLE_ADMIN')")
     @GetMapping
     public ResponseEntity<Page<Appointment>> getAppointments(
             @RequestParam(defaultValue = "0") int pageNumber,
@@ -38,22 +39,30 @@ public class AppointmentController {
         return ResponseEntity.ok(appointmentService.getAppointments(pageNumber, pageSize));
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_DOCTOR')")
+    @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_DOCTOR', 'ROLE_ADMIN')")
     @GetMapping("/list/id")
     public ResponseEntity<Optional<Appointment>> findById(@RequestParam Long appointmentId) {
         return ResponseEntity.ok(appointmentService.findById(appointmentId));
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_DOCTOR')")
+    @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_DOCTOR', 'ROLE_ADMIN')")
     @GetMapping("/list/startdate")
     public ResponseEntity<List<Appointment>> findByStartDate(@RequestParam LocalDateTime startDate) {
         return ResponseEntity.ok(appointmentService.findByStartDate(startDate));
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_DOCTOR')")
+    @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_DOCTOR', 'ROLE_ADMIN')")
     @GetMapping("/list/enddate")
     public ResponseEntity<List<Appointment>> findByEndDate(@RequestParam LocalDateTime endDate) {
         return ResponseEntity.ok(appointmentService.findByEndDate(endDate));
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_DOCTOR', 'ROLE_ADMIN')")
+    @GetMapping("/my-appointments")
+    public ResponseEntity<List<Appointment>> getUserAppointments(Authentication authentication) {
+        String username = authentication.getName(); // token’dan user çekiliyor
+        List<Appointment> appointments = appointmentService.findByUsername(username);
+        return ResponseEntity.ok(appointments);
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")

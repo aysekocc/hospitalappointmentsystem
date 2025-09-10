@@ -1,22 +1,23 @@
 package com.aysekoc.hospitalappointmantsystem.services.concretes;
 
 import com.aysekoc.hospitalappointmantsystem.entities.Appointment;
-import com.aysekoc.hospitalappointmantsystem.entities.Doctor;
-import com.aysekoc.hospitalappointmantsystem.entities.Hospital;
 import com.aysekoc.hospitalappointmantsystem.entities.User;
+import com.aysekoc.hospitalappointmantsystem.mapper.AppointmentMapper;
 import com.aysekoc.hospitalappointmantsystem.repositories.AppointmentRepository;
 import com.aysekoc.hospitalappointmantsystem.services.abstracts.AppointmentService;
+import com.aysekoc.hospitalappointmantsystem.services.dtos.AppointmentDto.AppointmentListDoctorDto;
+import com.aysekoc.hospitalappointmantsystem.services.dtos.AppointmentDto.AppointmentListUserDto;
 import com.aysekoc.hospitalappointmantsystem.services.dtos.AppointmentDto.CreateAppointment;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class AppointmentServiceImpl implements AppointmentService {
@@ -39,25 +40,14 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public String  createAppointment(CreateAppointment createAppointment) {
-        Appointment appointment = new Appointment();
-        Doctor doctor = doctorServiceImpl.findById(createAppointment.getDoctor()).orElseThrow();
-        appointment.setDoctor(doctor);
-        User user = userServiceImpl.findById(createAppointment.getUser()).orElseThrow();
-        appointment.setUser(user);
-        Hospital host = hospitalServiceImpl.findById(createAppointment.getHospitalId());
-        if(host==null) return "böyle bir hastane  yok ";
-        appointment.setHospitalId(host);
-        appointment.setStatus(createAppointment.getStatus());
-        appointment.setStartedDate(createAppointment.getStartedDate());
-        appointment.setEndedDate(createAppointment.getEndedDate());
-        appointmentRepository.save(appointment);
-        return  "Created";
+    public String createAppointment(CreateAppointment createAppointment) {
+        appointmentRepository.save(appointmentMapper.createAppointment(createAppointment));
+        return "Created";
     }
 
     @Override
-    public Optional<Appointment> findById(Long appointmetnId) {
-        Optional<Appointment> appointment = appointmentRepository.findById(appointmetnId);
+    public Optional<Appointment> findById(Long appointmentId) {
+        Optional<Appointment> appointment = appointmentRepository.findById(appointmentId);
         if (appointment.isEmpty()) {
             throw new RuntimeException("Appointment not found");
         }
@@ -66,14 +56,26 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public List<Appointment> findByStartDate(LocalDateTime startDate) {
-        List<Appointment> appointments = new ArrayList<Appointment>();
+        List<Appointment> appointments = appointmentRepository.findByStartedDate(startDate);
         return appointments;
     }
 
     @Override
+    public List<Appointment> findByUsername(String username) {
+        User user = userServiceImpl.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        return appointmentRepository.findByUser(user);
+    }
+
+    @Override
     public List<Appointment> findByEndDate(LocalDateTime endDate) {
-        List<Appointment> appointments = new ArrayList<Appointment>();
+        List<Appointment> appointments = appointmentRepository.findByEndedDate(endDate);
         return appointments;
+    }
+
+    @Override
+    public List<Appointment> findAll() {
+        return appointmentRepository.findAll();
     }
 
     @Override
@@ -81,4 +83,22 @@ public class AppointmentServiceImpl implements AppointmentService {
         appointmentRepository.deleteById(appointmetnId);
 
     }
+
+    @Override
+    public List<AppointmentListUserDto> userList(Long userId) {
+        List<Appointment> appointments = appointmentRepository.findByUserId(userId);
+        return appointments.stream()
+                .map(appointmentMapper::mapToUserDto).toList();
+    }
+    //buga girdi sanırım
+    @Override
+    public List<AppointmentListDoctorDto> doctorList(Long doctorId){
+        List<Appointment> appointments = appointmentRepository.findByUserId(doctorId);
+        if(appointments.isEmpty()){
+            throw new RuntimeException("Doctor not found");
+        }
+        return appointments.stream()
+                .map(appointmentMapper::mapToDoctorDto).toList();
+    }
+
 }

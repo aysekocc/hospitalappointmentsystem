@@ -12,7 +12,7 @@ import java.util.UUID;
 public interface UserService {
     void register(CreateUserRequest  req);
     String login(UserLoginRequest request);
-    Optional<User> findById(Long id);
+    User findById(Long id);
     List<User> findByName(String name);
     List<User> findAll();
     void updateUser(User user);

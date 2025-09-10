@@ -6,6 +6,7 @@ import com.aysekoc.hospitalappointmantsystem.entities.User;
 import com.aysekoc.hospitalappointmantsystem.services.abstracts.UserService;
 import com.aysekoc.hospitalappointmantsystem.services.dtos.UserDto.CreateUserRequest;
 import com.aysekoc.hospitalappointmantsystem.services.dtos.UserDto.LoginResponse;
+import com.aysekoc.hospitalappointmantsystem.services.dtos.UserDto.UpdateUser;
 import com.aysekoc.hospitalappointmantsystem.services.dtos.UserDto.UserLoginRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

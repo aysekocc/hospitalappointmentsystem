@@ -1,7 +1,6 @@
 package com.aysekoc.hospitalappointmantsystem.controllers;
 
 
-import com.aysekoc.hospitalappointmantsystem.entities.Doctor;
 import com.aysekoc.hospitalappointmantsystem.services.abstracts.DoctorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,26 +23,27 @@ public class DoctorController {
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_DOCTOR','ROLE_USER')")
     @GetMapping("/list/name")
-    public List<Doctor> findByHospitalName(String name) {
+    public List<DoctorListDto> findByHospitalName(String name) {
         return doctorService.findByName(name);
     }
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_DOCTOR','ROLE_USER')")
     @GetMapping("/list/title")
-    public List<Doctor> findByTitle(String title) {
+    public List<DoctorListDto> findByTitle(String title) {
         return doctorService.findByTitle(title);
     }
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_DOCTOR','ROLE_USER')")
     @GetMapping("/list/gender")
-    public List<Doctor> findByGender(boolean gender) {
+    public List<DoctorListDto> findByGender(boolean gender) {
         return doctorService.findByGender(gender);
     }
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_DOCTOR','ROLE_USER')")
     @GetMapping("/list")
-    public List<Doctor> findAll() {
-        return doctorService.findAll();
+    public Page<DoctorListDto> findAll(@RequestParam(defaultValue = "5") int size,
+                                       @RequestParam(defaultValue = "0") int page) {
+        return doctorService.findAll(size, page);
     }
 
 }

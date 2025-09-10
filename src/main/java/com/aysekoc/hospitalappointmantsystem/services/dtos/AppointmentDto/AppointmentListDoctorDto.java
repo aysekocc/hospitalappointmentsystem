@@ -1,20 +1,18 @@
 package com.aysekoc.hospitalappointmantsystem.services.dtos.AppointmentDto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ResponseAppointment {
-    private Long id;
+@Getter
+@Setter
+public class AppointmentListDoctorDto {
     private LocalDateTime startedDate;
     private LocalDateTime endedDate;
+    private Long doctor;
+    private Long hospitalId;
     private String status;
-    private Long user; // user.name + user.surname
-    private String doctorName;  // doctor.name + doctor.surname
-
 }

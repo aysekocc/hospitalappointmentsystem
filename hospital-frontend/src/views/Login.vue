@@ -30,9 +30,17 @@ export default {
           password: this.password
         });
 
+        localStorage.setItem("token", res.data.token);
+
+        // Eğer backend ayrıca rol döndürüyorsa onu da sakla:
+        localStorage.setItem("role", res.data.role);
+
+
         localStorage.setItem('token', res.data.token);
-        localStorage.setItem('role', res.data.role);
+        localStorage.setItem("role", res.data.role);
+
         localStorage.setItem('userId', res.data.userId);
+        this.$router.push("/appointments/my-appointments");
 
         this.message = 'Login successful!';
         if(res.data.role==="ROLE_DOCTOR"){

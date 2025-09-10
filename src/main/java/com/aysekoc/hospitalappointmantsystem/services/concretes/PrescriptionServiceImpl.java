@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 
 
 @Service
@@ -41,7 +40,7 @@ public class PrescriptionServiceImpl implements PrescriptionService {
     @Override
     public List<Prescription> findByDate(LocalDateTime date) {
         List<Prescription> prescription = prescriptionRepository.findByDate(date);
-        if(prescription.isEmpty()){
+        if (prescription.isEmpty()) {
             throw new NullPointerException("prescription is null");
         }
         return prescription;

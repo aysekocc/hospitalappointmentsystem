@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.UUID;
 
 public interface HospitalService {
-
     void createByHospital(CreateHospital createHospital);
     List<Hospital> findByHospitalName(CreateHospital createHospital);
     Hospital updateHospital(Long id, CreateHospital createHospital);
