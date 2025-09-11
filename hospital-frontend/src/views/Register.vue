@@ -20,7 +20,6 @@
         <option disabled value="">Select Role</option>
         <option value="USER">User</option>
         <option value="DOCTOR">Doctor</option>
-        <option value="ADMIN">Admin</option>
       </select>
 
       <button type="submit">Register</button>
