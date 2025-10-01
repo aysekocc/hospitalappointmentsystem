@@ -60,7 +60,7 @@ export default {
       prescription: {
         medicineName: "",
         diagnosis: "",
-        user: null,
+        userId: null,
       },
       deleteId: "",
       successMessage: "",
@@ -72,40 +72,29 @@ export default {
       try {
         const token = localStorage.getItem("token");
 
-        const requestBody = {
-          medicineName: this.prescription.medicineName,
-          diagnosis: this.prescription.diagnosis,
-          user: this.userId
-        };
-
-        await axios.post(
-          "/api/v1/prescription/create",
-          {
-            medicineName: this.prescription.medicineName,
-            diagnosis: this.prescription.diagnosis,
-            userId: this.prescription.userId
-          },
-          {
-            headers: { Authorization: `Bearer ${token}` } }
-        );
+        await axios.post("/api/v1/prescription/create", this.prescription, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
 
         this.successMessage = "Reçete başarıyla oluşturuldu.";
         this.errorMessage = "";
-        this.prescription = { medicineName: "", diagnosis: "" };
-        this.userId = null;
+
+        this.prescription = {
+          medicineName: "",
+          diagnosis: "",
+          userId: null
+        };
 
       } catch (err) {
         console.error(err);
-        this.errorMessage =
-          err.response?.data?.message || "Reçete kaydedilemedi.";
+        this.errorMessage = "Reçete oluşturulamadı.";
+        this.successMessage = "";
       }
     },
-
 
     async deletePrescription() {
       try {
         const token = localStorage.getItem("token");
-        console.log(this.deleteId);
         await axios.delete(
           `/api/v1/prescription/${this.deleteId}`,
           { headers: { Authorization: `Bearer ${token}` } }

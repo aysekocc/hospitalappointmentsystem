@@ -18,21 +18,24 @@ public class PrescriptionMapper {
 
     private final UserService userService;
 
-    public  Prescription createMap(CreatePrescription createPrescription){
+    public Prescription createMap(CreatePrescription createPrescription){
         User user = userService.findById(createPrescription.getUserId());
+        if(user == null) {
+            throw new RuntimeException("User not found with id " + createPrescription.getUserId());
+        }
         Prescription prescription = new Prescription();
         prescription.setDate(LocalDateTime.now());
         prescription.setMedicineName(createPrescription.getMedicineName());
         prescription.setDiagnosis(createPrescription.getDiagnosis());
         prescription.setUser(user);
-        prescription.setHashPrescription(hash());
+        prescription.setHashPrescription(generateHash());
         return prescription;
     }
-    private String hash() {
-        Random random = new Random();
-        int code = random.nextInt(9000) + 1000; // 1000 - 9999 arası
-        return String.valueOf(code);
+
+    private String generateHash() {
+        return String.valueOf((int)(Math.random() * 9000 + 1000)); // 1000-9999 arası
     }
+
     public static PrescriptionListDto toDto(Prescription prescription){
         return  new PrescriptionListDto(
                 prescription.getId(),
@@ -44,3 +47,4 @@ public class PrescriptionMapper {
         );
     }
 }
+

@@ -4,6 +4,7 @@ package com.aysekoc.hospitalappointmantsystem.controllers;
 import com.aysekoc.hospitalappointmantsystem.services.abstracts.DoctorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DoctorController {
     private final DoctorService doctorService;
+    private final AppointmentService appointmentService;
 
     @PreAuthorize("hasRole('ROLE_DOCTOR')")
     @PostMapping("/create")
@@ -45,5 +47,7 @@ public class DoctorController {
                                        @RequestParam(defaultValue = "0") int page) {
         return doctorService.findAll(size, page);
     }
+
+
 
 }

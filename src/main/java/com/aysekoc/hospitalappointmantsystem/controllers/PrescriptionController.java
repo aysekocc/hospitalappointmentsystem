@@ -3,14 +3,19 @@ package com.aysekoc.hospitalappointmantsystem.controllers;
 
 import com.aysekoc.hospitalappointmantsystem.entities.Prescription;
 import com.aysekoc.hospitalappointmantsystem.services.abstracts.PrescriptionService;
+import com.aysekoc.hospitalappointmantsystem.services.dtos.PrescriptionDto.CreatePrescription;
 import com.aysekoc.hospitalappointmantsystem.services.dtos.PrescriptionDto.PrescriptionListDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @RestController
@@ -23,8 +28,9 @@ public class PrescriptionController {
 
     @PreAuthorize("hasRole('ROLE_DOCTOR')")
     @PostMapping("/create")
-    public void createPrescription(@RequestBody Prescription prescription){
-        prescription.setDate(LocalDateTime.now());
+    public void createPrescription(@RequestBody CreatePrescription createPrescription, @AuthenticationPrincipal UserDetails user) {
+        prescriptionService.create(createPrescription);
+        System.out.println("prescription created");
     }
 
 
@@ -40,9 +46,9 @@ public class PrescriptionController {
         return prescriptionService.findById(userId, pageable);
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_DOCTOR')")
-    @DeleteMapping()
-    public void deleteById(Long id){
+    @PreAuthorize("hasRole('ROLE_DOCTOR')")
+    @DeleteMapping("/{id}")
+    public void deleteById(@PathVariable Long id){
         prescriptionService.deleteById(id);
     }
 }

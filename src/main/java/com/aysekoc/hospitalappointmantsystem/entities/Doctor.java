@@ -25,6 +25,12 @@ public class Doctor {
     @Column(name="surname")
     private String surname;
 
+    @Column(name="password")
+    private String password;
+
+    @Column(name="username")
+    private String username;
+
     @Column(name="specialty")
     private String specialty;
 

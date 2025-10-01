@@ -90,7 +90,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         return appointments.stream()
                 .map(appointmentMapper::mapToUserDto).toList();
     }
-    //buga girdi sanırım
+
     @Override
     public List<AppointmentListDoctorDto> doctorList(Long doctorId){
         List<Appointment> appointments = appointmentRepository.findByUserId(doctorId);

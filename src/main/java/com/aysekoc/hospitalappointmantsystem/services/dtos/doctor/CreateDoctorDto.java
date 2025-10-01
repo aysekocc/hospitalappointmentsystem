@@ -6,12 +6,12 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
 public class CreateDoctorDto {
     private String name;
     private String surname;
     private String specialty;
     private String title;
+
     private boolean gender;
     private int age;
     private Long appointmentId;

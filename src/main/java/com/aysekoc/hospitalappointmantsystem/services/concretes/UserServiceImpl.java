@@ -6,13 +6,16 @@ import com.aysekoc.hospitalappointmantsystem.repositories.UserRepository;
 import com.aysekoc.hospitalappointmantsystem.services.abstracts.UserService;
 import com.aysekoc.hospitalappointmantsystem.services.dtos.UserDto.CreateUserRequest;
 import com.aysekoc.hospitalappointmantsystem.services.dtos.UserDto.UserLoginRequest;
+import com.aysekoc.hospitalappointmantsystem.services.dtos.doctor.CreateDoctorDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -43,12 +46,32 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public String login(UserLoginRequest req) {
+    public Map<String, Object> login(UserLoginRequest req) {
+        Map<String, Object> res = new HashMap<>();
+
+        // 1. User repository kontrol et
         Optional<User> user = userRepository.findByUsername(req.getUsername());
-        if (user.isEmpty() || !passwordEncoder.matches(req.getPassword(), user.get().getPassword())) {
-            throw new BadCredentialsException("Invalid username or password");
+        if(user.isPresent() && passwordEncoder.matches(req.getPassword(), user.get().getPassword())) {
+            String token = jwtToken.generateToken(user.get().getUsername(), user.get().getRole().name());
+            res.put("token", token);
+            res.put("role", user.get().getRole().name());
+            res.put("message", "Login successful");
+            res.put("userId", user.get().getId());
+            return res;
         }
-        return jwtToken.generateToken(user.get().getUsername(), user.get().getRole().name());
+
+        // 2. Doctor repository kontrol et
+        Optional<Doctor> doctor = doctorRepository.findByUsername(req.getUsername());
+        if(doctor.isPresent() && passwordEncoder.matches(req.getPassword(), doctor.get().getPassword())) {
+            String token = jwtToken.generateToken(doctor.get().getUsername(), doctor.get().getRole().name());
+            res.put("token", token);
+            res.put("role", doctor.get().getRole().name());
+            res.put("message", "Login successful");
+            res.put("userId", doctor.get().getId());
+            return res;
+        }
+
+        throw new BadCredentialsException("Invalid username or password");
     }
 
     @Override

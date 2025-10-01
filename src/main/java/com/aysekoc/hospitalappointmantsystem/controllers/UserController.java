@@ -3,6 +3,7 @@ package com.aysekoc.hospitalappointmantsystem.controllers;
 
 import com.aysekoc.hospitalappointmantsystem.config.JwtToken;
 import com.aysekoc.hospitalappointmantsystem.entities.User;
+import com.aysekoc.hospitalappointmantsystem.services.abstracts.DoctorService;
 import com.aysekoc.hospitalappointmantsystem.services.abstracts.UserService;
 import com.aysekoc.hospitalappointmantsystem.services.dtos.UserDto.CreateUserRequest;
 import com.aysekoc.hospitalappointmantsystem.services.dtos.UserDto.LoginResponse;
@@ -16,6 +17,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -41,37 +43,16 @@ public class UserController {
         response.put("message", "User registered successfully");
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
-
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody UserLoginRequest request) {
         try {
-
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            request.getUsername(),
-                            request.getPassword()
-                    )
-            );
-
-
-            String role = authentication.getAuthorities()
-                    .iterator()
-                    .next()
-                    .getAuthority();
-
-
-            String token = jwtToken.generateToken(request.getUsername(), role);
-
-
-            return ResponseEntity.ok(new LoginResponse(token, role, "İşlem Başarılı", userService.findByUsername(request.getUsername()).get().getId()));
-
-        } catch (Exception e) {
+            Map<String, Object> response = userService.login(request);
+            return ResponseEntity.ok(response);
+        } catch (BadCredentialsException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body("Geçersiz kullanıcı adı veya şifre");
         }
-
     }
-
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/list/id")
