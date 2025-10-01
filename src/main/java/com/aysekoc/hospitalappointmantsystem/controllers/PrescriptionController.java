@@ -28,9 +28,8 @@ public class PrescriptionController {
 
     @PreAuthorize("hasRole('ROLE_DOCTOR')")
     @PostMapping("/create")
-    public void createPrescription(@RequestBody CreatePrescription createPrescription, @AuthenticationPrincipal UserDetails user) {
+    public void createPrescription(@RequestBody CreatePrescription createPrescription) {
         prescriptionService.create(createPrescription);
-        System.out.println("prescription created");
     }
 
 

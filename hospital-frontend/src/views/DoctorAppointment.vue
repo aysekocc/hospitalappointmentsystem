@@ -2,8 +2,11 @@
   <div class="doctor-appointments p-6 relative">
     <div class="overlay"></div>
     <div class="content-container">
-      <h2 class="text-2xl mb-4 font-semibold text-white">Hastalarımın Randevuları</h2>
-
+      <h2 v-if="doctor" class="text-2xl mb-4 font-semibold text-white">
+        Hoşgeldiniz {{ doctor.title }} {{ doctor.name }}
+        <br />
+        Randevularınız Aşağıdadır
+      </h2>
       <div v-if="loading" class="text-white font-medium">Yükleniyor...</div>
       <div v-else-if="error" class="text-red-400 font-medium">{{ error }}</div>
       <div v-else>
@@ -20,7 +23,7 @@
           <tbody>
           <tr v-for="appt in appointments" :key="appt.id" class="hover:bg-blue-100 hover:bg-opacity-30 transition-colors">
             <td>{{ appt.id }}</td>
-            <td>{{ appt.userName || "-" }}</td>
+            <td>{{ appt.userUsername }}</td>
             <td>{{ formatDate(appt.startedDate) }}</td>
             <td>{{ formatDate(appt.endedDate) }}</td>
             <td>
@@ -55,6 +58,7 @@ import axios from "axios";
 export default {
   data() {
     return {
+      doctor: null,
       appointments: [],
       loading: false,
       error: "",
@@ -76,6 +80,13 @@ export default {
           headers: { Authorization: `Bearer ${token}` },
         });
         this.appointments = res.data;
+
+        if (this.appointments.length > 0) {
+          this.doctor = {
+            doctorName: this.appointments[0].doctorName,
+            doctorId: this.appointments[0].doctorId,
+          };
+        }
       } catch (err) {
         console.error(err);
         this.error = "Randevular alınamadı!";
@@ -106,8 +117,17 @@ export default {
       }
     },
     formatDate(dateStr) {
-      return new Date(dateStr).toLocaleString("tr-TR", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" });
-    },
+      if (!dateStr) return "-";
+      const date = new Date(dateStr);
+      if (isNaN(date)) return "-";
+      return date.toLocaleString("tr-TR", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+      },
   },
 };
 </script>

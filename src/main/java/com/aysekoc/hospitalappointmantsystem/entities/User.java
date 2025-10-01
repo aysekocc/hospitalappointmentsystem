@@ -43,6 +43,14 @@ public class User {
     @Column(name="password")
     private String password;
 
+    @ManyToMany
+    @JoinTable(
+            name = "user_doctors",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "doctor_id")
+    )
+    private Set<Doctor> doctors;
+
     @Column(name="role")
     @Enumerated(EnumType.STRING)
     private Roles role;

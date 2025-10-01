@@ -41,4 +41,6 @@ public class Appointment {
     @JoinColumn(name="hospital_id")
     private Hospital hospitalId;
 
+
+
 }

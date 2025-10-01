@@ -1,6 +1,12 @@
 package com.aysekoc.hospitalappointmantsystem.controllers;
 import com.aysekoc.hospitalappointmantsystem.entities.Appointment;
+import com.aysekoc.hospitalappointmantsystem.entities.Doctor;
+import com.aysekoc.hospitalappointmantsystem.entities.User;
+import com.aysekoc.hospitalappointmantsystem.mapper.AppointmentMapper;
+import com.aysekoc.hospitalappointmantsystem.repositories.UserRepository;
 import com.aysekoc.hospitalappointmantsystem.services.abstracts.AppointmentService;
+import com.aysekoc.hospitalappointmantsystem.services.abstracts.DoctorService;
+import com.aysekoc.hospitalappointmantsystem.services.dtos.AppointmentDto.AppointmentDto;
 import com.aysekoc.hospitalappointmantsystem.services.dtos.AppointmentDto.AppointmentListDoctorDto;
 import com.aysekoc.hospitalappointmantsystem.services.dtos.AppointmentDto.AppointmentListUserDto;
 import com.aysekoc.hospitalappointmantsystem.services.dtos.AppointmentDto.CreateAppointment;
@@ -11,11 +17,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/appointment")
@@ -24,6 +35,9 @@ import java.util.Optional;
 public class AppointmentController {
 
     private final AppointmentService appointmentService;
+    private final UserRepository userRepository;
+    private final DoctorService doctorService;
+    private final AppointmentMapper appointmentMapper;
 
     @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_DOCTOR')")
     @PostMapping("/create")
@@ -46,6 +60,7 @@ public class AppointmentController {
     public ResponseEntity<Optional<Appointment>> findById(@Valid @RequestParam Long appointmentId) {
         return ResponseEntity.ok(appointmentService.findById(appointmentId));
     }
+
 
     @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_DOCTOR')")
     @GetMapping("/list/startdate")

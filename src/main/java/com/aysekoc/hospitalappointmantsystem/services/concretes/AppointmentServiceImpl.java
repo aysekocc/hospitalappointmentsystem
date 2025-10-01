@@ -5,6 +5,7 @@ import com.aysekoc.hospitalappointmantsystem.entities.User;
 import com.aysekoc.hospitalappointmantsystem.mapper.AppointmentMapper;
 import com.aysekoc.hospitalappointmantsystem.repositories.AppointmentRepository;
 import com.aysekoc.hospitalappointmantsystem.services.abstracts.AppointmentService;
+import com.aysekoc.hospitalappointmantsystem.services.dtos.AppointmentDto.AppointmentDto;
 import com.aysekoc.hospitalappointmantsystem.services.dtos.AppointmentDto.AppointmentListDoctorDto;
 import com.aysekoc.hospitalappointmantsystem.services.dtos.AppointmentDto.AppointmentListUserDto;
 import com.aysekoc.hospitalappointmantsystem.services.dtos.AppointmentDto.CreateAppointment;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class AppointmentServiceImpl implements AppointmentService {
@@ -78,11 +80,6 @@ public class AppointmentServiceImpl implements AppointmentService {
         return appointmentRepository.findAll();
     }
 
-    @Override
-    public void deleteAppointment(Long appointmetnId) {
-        appointmentRepository.deleteById(appointmetnId);
-
-    }
 
     @Override
     public List<AppointmentListUserDto> userList(Long userId) {
@@ -91,14 +88,30 @@ public class AppointmentServiceImpl implements AppointmentService {
                 .map(appointmentMapper::mapToUserDto).toList();
     }
 
+
     @Override
-    public List<AppointmentListDoctorDto> doctorList(Long doctorId){
-        List<Appointment> appointments = appointmentRepository.findByUserId(doctorId);
-        if(appointments.isEmpty()){
-            throw new RuntimeException("Doctor not found");
-        }
-        return appointments.stream()
-                .map(appointmentMapper::mapToDoctorDto).toList();
+    public List<AppointmentListDoctorDto> getAppointmentsByDoctorId(Long doctorId) {
+        return appointmentRepository.findByDoctorId(doctorId)
+                .stream()
+                .map(appointmentMapper::mapToDoctorDto)
+                .collect(Collectors.toList());
     }
+
+
+    @Override
+    public List<Appointment> findByDoctorId(Long doctorId) {
+        return appointmentRepository.findByDoctorId(doctorId);
+    }
+
+    @Override
+    @Transactional
+    public void deleteAppointment(Long appointmentId) {
+
+        if (!appointmentRepository.existsById(appointmentId)) {
+            throw new RuntimeException("Appointment not found with id: " + appointmentId);
+        }
+        appointmentRepository.deleteById(appointmentId);
+    }
+
 
 }

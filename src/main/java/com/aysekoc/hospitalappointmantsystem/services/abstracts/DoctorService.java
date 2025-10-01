@@ -12,6 +12,7 @@ public interface DoctorService {
     List<Doctor> findByGender(boolean gender);
     List<Doctor> findAll();
     Optional<Doctor> findById(Long id);
+    Optional<Doctor> findByUsername(String username);
 
 
 }

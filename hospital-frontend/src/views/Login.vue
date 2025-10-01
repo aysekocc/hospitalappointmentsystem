@@ -50,15 +50,13 @@ export default {
         localStorage.setItem("role", role);
         localStorage.setItem("userId", userId);
 
-        // Eğer roleParam tanımlı ise doğrula
         if (this.roleParam && ((this.roleParam === "doctor" && role !== "ROLE_DOCTOR") || (this.roleParam === "user" && role !== "ROLE_USER"))) {
           this.message = "Giriş yetkiniz yok!";
           return;
         }
 
-        // Yönlendirme
         if (role === "ROLE_DOCTOR") {
-          this.$router.push('/prescriptions');
+          this.$router.push('/doctor-appointments');
         } else if (role === "ROLE_USER") {
           this.$router.push('/appointments');
         }

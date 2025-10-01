@@ -50,7 +50,7 @@ public class UserController {
             return ResponseEntity.ok(response);
         } catch (BadCredentialsException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body("Geçersiz kullanıcı adı veya şifre");
+                    .body(Map.of("message", "Geçersiz kullanıcı adı veya şifre"));
         }
     }
 

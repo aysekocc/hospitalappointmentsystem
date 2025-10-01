@@ -17,10 +17,14 @@ public class DoctorMapper {
         Doctor doctorEntity = new Doctor();
         doctorEntity.setName(doctor.getName());
         doctorEntity.setSurname(doctor.getSurname());
-        doctorEntity.setAge(doctor.getAge());
-        doctorEntity.setGender(doctor.isGender());
         doctorEntity.setSpecialty(doctor.getSpecialty());
-        doctorEntity.setUserId(doctor.getUserId());
+        doctorEntity.setTitle(doctor.getTitle());
+        doctorEntity.setGender(doctor.isGender());
+        doctorEntity.setPassword(doctor.getPassword());
+        doctorEntity.setUsername(doctor.getUsername());
+        doctorEntity.setAge(doctor.getAge());
+        doctorEntity.setAppointmentId(doctor.getAppointmentId());
+        doctorEntity.setUsers(doctor.getUserId());
         doctorEntity.setHospital(hospitalServiceImpl.findByIdMap(doctor.getHospitalId()));
         return doctorEntity;
     }

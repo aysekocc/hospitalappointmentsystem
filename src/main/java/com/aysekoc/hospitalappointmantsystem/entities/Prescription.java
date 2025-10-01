@@ -1,5 +1,6 @@
 package com.aysekoc.hospitalappointmantsystem.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -36,7 +37,13 @@ public class Prescription {
 
     @ManyToOne
     @JoinColumn(name="user_id")
+    @JsonIgnore
     private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "appointment_id")
+    @JsonIgnore
+    private Appointment appointment;
 
 
 

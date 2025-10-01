@@ -6,9 +6,9 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class LoginResponse {
-    private String token;   // JWT token
-    private String role;    // ROLE_USER veya ROLE_DOCTOR
-    private String message; // Başarılı veya hata mesajı
-    private Long userId;    // User veya Doctor ID
+    private String token;
+    private String role;
+    private String message;
+    private Long userId;
 }
 

@@ -1,10 +1,12 @@
 package com.aysekoc.hospitalappointmantsystem.services.abstracts;
 
 import com.aysekoc.hospitalappointmantsystem.entities.Appointment;
+import com.aysekoc.hospitalappointmantsystem.services.dtos.AppointmentDto.AppointmentDto;
 import com.aysekoc.hospitalappointmantsystem.services.dtos.AppointmentDto.AppointmentListDoctorDto;
 import com.aysekoc.hospitalappointmantsystem.services.dtos.AppointmentDto.AppointmentListUserDto;
 import com.aysekoc.hospitalappointmantsystem.services.dtos.AppointmentDto.CreateAppointment;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,10 +20,9 @@ public interface AppointmentService {
     List<Appointment> findByUsername(String username);
     List<Appointment> findByEndDate(LocalDateTime endDate);
     List<Appointment> findAll();
-    void deleteAppointment(Long id);
+    void deleteAppointment(Long appointmentId);
     List<AppointmentListUserDto> userList(Long userId);
-    List<AppointmentListDoctorDto> doctorList(Long doctorId);
-
-
-
+    List<AppointmentListDoctorDto> getAppointmentsByDoctorId(Long doctorId);
+    List<Appointment> findByDoctorId(Long doctorId);
 }
+

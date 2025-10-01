@@ -52,12 +52,17 @@ public class AppointmentMapper {
 
     public AppointmentListDoctorDto mapToDoctorDto(Appointment appt) {
         AppointmentListDoctorDto dto = new AppointmentListDoctorDto();
+        dto.setId(appt.getId());
         dto.setStartedDate(appt.getStartedDate());
         dto.setEndedDate(appt.getEndedDate());
-        dto.setDoctor(appt.getDoctor().getId());
+        dto.setDoctorId(appt.getDoctor().getId());
+        dto.setDoctorName(appt.getDoctor().getName());
+        dto.setDoctorTitle(appt.getDoctor().getTitle());
         dto.setHospitalId(appt.getHospitalId().getId());
+        dto.setHospitalName(appt.getHospitalId().getName());
         dto.setStatus(appt.getStatus());
+        dto.setUserUsername(appt.getUser().getUsername());
+
         return dto;
     }
-
 }
