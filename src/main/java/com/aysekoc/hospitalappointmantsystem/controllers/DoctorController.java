@@ -48,6 +48,12 @@ public class DoctorController {
         return doctorService.findAll(size, page);
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<List<Doctor>> getAllDoctors() {
+        List<Doctor> doctors = doctorService.getAllDoctors();
+        return ResponseEntity.ok(doctors);
+    }
+
 
 
 }

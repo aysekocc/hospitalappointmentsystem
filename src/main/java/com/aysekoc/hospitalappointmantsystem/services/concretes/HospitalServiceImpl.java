@@ -79,5 +79,10 @@ public class HospitalServiceImpl implements HospitalService {
       return   hospitalRepository.findById(Id).orElseThrow(() -> new RuntimeException("Hospital not found"));
     }
 
+    @Override
+    public List<Hospital> getAllHospitals() {
+        return hospitalRepository.findAll();
+    }
+
 
 }

@@ -13,6 +13,7 @@ public interface DoctorService {
     List<Doctor> findAll();
     Optional<Doctor> findById(Long id);
     Optional<Doctor> findByUsername(String username);
+    List<Doctor> getAllDoctors();
 
 
 }

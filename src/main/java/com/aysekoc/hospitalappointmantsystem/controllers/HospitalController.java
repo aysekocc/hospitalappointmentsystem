@@ -57,4 +57,10 @@ public class HospitalController {
     }
 
 
+    @GetMapping("/all")
+    public ResponseEntity<List<Hospital>> getAllHospitals() {
+        List<Hospital> hospitals = hospitalService.getAllHospitals();
+        return ResponseEntity.ok(hospitals);
+    }
+
 }

@@ -44,6 +44,23 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
+    @Override
+    public void registerDoctor(CreateDoctorDto request) {
+        Doctor doctor = new Doctor();
+        doctor.setName(request.getName());
+        doctor.setSurname(request.getSurname());
+        doctor.setPassword(passwordEncoder.encode(request.getPassword()));
+        doctor.setUsername(request.getUsername());
+        doctor.setSpecialty(request.getSpecialty());
+        doctor.setTitle(request.getTitle());
+        doctor.setGender(request.isGender());
+        doctor.setAge(request.getAge());
+        Hospital hospital = hospitalRepository.findById(request.getHospitalId())
+                .orElseThrow(() -> new RuntimeException("Hospital not found"));
+        doctor.setHospital(hospital);
+        doctor.setRole(Roles.ROLE_DOCTOR);
+        doctorRepository.save(doctor);
+    }
 
     @Override
     public Map<String, Object> login(UserLoginRequest req) {

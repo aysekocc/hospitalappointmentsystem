@@ -9,7 +9,6 @@
         <input type="datetime-local" v-model="appointment.startedDate" required class="input-field" />
         <input type="datetime-local" v-model="appointment.endedDate" required class="input-field" />
         <input type="number" v-model="appointment.doctor" placeholder="Doktor ID" required class="input-field" />
-        <input type="number" v-model="appointment.user" placeholder="Kullanıcı ID" required class="input-field" />
         <input type="number" v-model="appointment.hospitalId" placeholder="Hastane ID" required class="input-field" />
 
 
@@ -38,7 +37,6 @@ export default {
         startedDate: "",
         endedDate: "",
         doctor: null,
-        user: null,
         hospitalId: null,
         status: "",
       },
@@ -65,7 +63,6 @@ export default {
           startedDate: "",
           endedDate: "",
           doctor: null,
-          user: null,
           hospitalId: null,
           status: "",
         };

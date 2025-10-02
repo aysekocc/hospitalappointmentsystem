@@ -25,8 +25,8 @@ public class AppointmentMapper {
         Appointment appointment = new Appointment();
         Doctor doctor = doctorServiceImpl.findById(createAppointment.getDoctor()).orElseThrow(() -> new RuntimeException("Doctor not found"));
         appointment.setDoctor(doctor);
-        User user = userServiceImpl.findById(createAppointment.getUser());
-        appointment.setUser(user);
+        //User user = userServiceImpl.findById(createAppointment.getUser());
+        //appointment.setUser(user);
         Hospital host = hospitalServiceImpl.findByIdMap(createAppointment.getHospitalId());
         appointment.setHospitalId(host);
         appointment.setStatus(createAppointment.getStatus());

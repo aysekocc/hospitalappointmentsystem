@@ -5,7 +5,6 @@ import com.aysekoc.hospitalappointmantsystem.entities.User;
 import com.aysekoc.hospitalappointmantsystem.mapper.AppointmentMapper;
 import com.aysekoc.hospitalappointmantsystem.repositories.AppointmentRepository;
 import com.aysekoc.hospitalappointmantsystem.services.abstracts.AppointmentService;
-import com.aysekoc.hospitalappointmantsystem.services.dtos.AppointmentDto.AppointmentDto;
 import com.aysekoc.hospitalappointmantsystem.services.dtos.AppointmentDto.AppointmentListDoctorDto;
 import com.aysekoc.hospitalappointmantsystem.services.dtos.AppointmentDto.AppointmentListUserDto;
 import com.aysekoc.hospitalappointmantsystem.services.dtos.AppointmentDto.CreateAppointment;

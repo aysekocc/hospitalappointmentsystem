@@ -15,9 +15,7 @@
           <option :value="false">Kadın</option>
         </select>
         <input type="number" v-model="age" placeholder="Yaş" required />
-        <input type="number" v-model="appointmentId" placeholder="Randevu ID" required />
         <input type="number" v-model="hospitalId" placeholder="Hastane ID" required />
-        <input type="number" v-model="userId" placeholder="User ID" required />
 
         <button type="submit">Kaydol</button>
       </form>
@@ -44,9 +42,7 @@ export default {
       title: '',
       gender: true,
       age: null,
-      appointmentId: null,
       hospitalId: null,
-      userId: null,
       message: '',
       registrationSuccess: false,
     };
@@ -63,9 +59,7 @@ export default {
           title: this.title,
           gender: this.gender,
           age: this.age,
-          appointmentId: this.appointmentId,
           hospitalId: this.hospitalId,
-          userId: this.userId
         });
         this.message = 'Kayıt başarılı!';
         this.registrationSuccess = true;
