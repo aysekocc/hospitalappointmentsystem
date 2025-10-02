@@ -26,9 +26,6 @@ public class Appointment {
     @Column(name="ended_date")
     private LocalDateTime endedDate;
 
-    @Column(name="status")
-    private String status;
-
     @ManyToOne
     @JoinColumn(name="user_id")
     private User user;
@@ -40,6 +37,12 @@ public class Appointment {
     @ManyToOne
     @JoinColumn(name="hospital_id")
     private Hospital hospitalId;
+
+
+
+
+
+
 
 
 

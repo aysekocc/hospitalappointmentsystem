@@ -1,5 +1,7 @@
 package com.aysekoc.hospitalappointmantsystem.services.dtos.AppointmentDto;
 
+import com.aysekoc.hospitalappointmantsystem.entities.Clinic;
+import jakarta.persistence.Column;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -16,9 +18,7 @@ public class AppointmentListUserDto {
     private String userName;
     private String doctorName;
     private String hospitalName;
-    private String status;
     private String title;
-    private String town;
-    private String township;
+    private Clinic clinic;
 
 }

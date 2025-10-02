@@ -24,19 +24,25 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByUsername(username)
-                .map(user -> new org.springframework.security.core.userdetails.User(
-                        user.getUsername(),
-                        user.getPassword(),
-                        Collections.singleton(new SimpleGrantedAuthority("ROLE_" + user.getRole().name())) // Enum -> ROLE_X
-                ))
-                .orElseGet(() -> doctorRepository.findByUsername(username)
-                        .map(doctor -> new org.springframework.security.core.userdetails.User(
-                                doctor.getUsername(),
-                                doctor.getPassword(),
-                                Collections.singleton(new SimpleGrantedAuthority("ROLE_" + doctor.getRole().name())) // Enum -> ROLE_X
-                        ))
-                        .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username))
-                );
+        Optional<User> user = userRepository.findByUsername(username);
+        if (user.isPresent()) {
+            return new org.springframework.security.core.userdetails.User(
+                    user.get().getUsername(),
+                    user.get().getPassword(),
+                    Collections.singleton(new SimpleGrantedAuthority("ROLE_" + user.get().getRole().name()))
+            );
+        }
+
+        Optional<Doctor> doctor = doctorRepository.findByUsername(username);
+        if (doctor.isPresent()) {
+            return new org.springframework.security.core.userdetails.User(
+                    doctor.get().getUsername(),
+                    doctor.get().getPassword(),
+                    Collections.singleton(new SimpleGrantedAuthority("ROLE_" + doctor.get().getRole().name()))
+            );
+        }
+
+        throw new UsernameNotFoundException("User/Doctor not found: " + username);
     }
+
 }

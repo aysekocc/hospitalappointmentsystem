@@ -13,7 +13,7 @@ import java.util.Optional;
 public interface UserService {
     void registerUser(CreateUserRequest request);
     void registerDoctor(CreateDoctorDto request);
-    User findById(Long id);
+    Optional<User> findById(Long id);
     List<User> findByName(String name);
     List<User> findAll();
     void updateUser(User user);

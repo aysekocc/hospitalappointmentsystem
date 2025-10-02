@@ -16,5 +16,8 @@ public class CreateDoctorDto {
     private int age;
     private Long appointmentId;
     private Long hospitalId;
-    private Long userId;
+
+    private Set<User> userId;
+
+    private Clinic clinic;
 }

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -48,17 +49,12 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public Optional<Appointment> findById(Long appointmentId) {
-        Optional<Appointment> appointment = appointmentRepository.findById(appointmentId);
-        if (appointment.isEmpty()) {
-            throw new RuntimeException("Appointment not found");
-        }
-        return appointment;
+        return appointmentRepository.findById(appointmentId);
     }
 
     @Override
     public List<Appointment> findByStartDate(LocalDateTime startDate) {
-        List<Appointment> appointments = appointmentRepository.findByStartedDate(startDate);
-        return appointments;
+        return appointmentRepository.findByStartedDate(startDate);
     }
 
     @Override
@@ -70,8 +66,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public List<Appointment> findByEndDate(LocalDateTime endDate) {
-        List<Appointment> appointments = appointmentRepository.findByEndedDate(endDate);
-        return appointments;
+        return appointmentRepository.findByEndedDate(endDate);
     }
 
     @Override
@@ -79,38 +74,36 @@ public class AppointmentServiceImpl implements AppointmentService {
         return appointmentRepository.findAll();
     }
 
-
     @Override
     public List<AppointmentListUserDto> userList(Long userId) {
         List<Appointment> appointments = appointmentRepository.findByUserId(userId);
+        if (appointments == null || appointments.isEmpty()) return Collections.emptyList();
         return appointments.stream()
-                .map(appointmentMapper::mapToUserDto).toList();
+                .map(appointmentMapper::mapToUserDto)
+                .collect(Collectors.toList());
     }
-
 
     @Override
     public List<AppointmentListDoctorDto> getAppointmentsByDoctorId(Long doctorId) {
-        return appointmentRepository.findByDoctorId(doctorId)
-                .stream()
+        List<Appointment> appointments = appointmentRepository.findByDoctorId(doctorId);
+        if (appointments == null || appointments.isEmpty()) return Collections.emptyList();
+        return appointments.stream()
                 .map(appointmentMapper::mapToDoctorDto)
                 .collect(Collectors.toList());
     }
 
-
     @Override
     public List<Appointment> findByDoctorId(Long doctorId) {
-        return appointmentRepository.findByDoctorId(doctorId);
+        List<Appointment> appointments = appointmentRepository.findByDoctorId(doctorId);
+        return appointments != null ? appointments : Collections.emptyList();
     }
 
     @Override
     @Transactional
     public void deleteAppointment(Long appointmentId) {
-
         if (!appointmentRepository.existsById(appointmentId)) {
             throw new RuntimeException("Appointment not found with id: " + appointmentId);
         }
         appointmentRepository.deleteById(appointmentId);
     }
-
-
 }

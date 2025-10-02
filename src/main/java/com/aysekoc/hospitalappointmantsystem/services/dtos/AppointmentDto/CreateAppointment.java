@@ -20,7 +20,7 @@ public class CreateAppointment {
     private LocalDateTime startedDate;
     private LocalDateTime endedDate;
     private Long doctor;
-    private Long user;
+    private Long userId;
     private Long hospitalId;
-    private String status;
+
 }

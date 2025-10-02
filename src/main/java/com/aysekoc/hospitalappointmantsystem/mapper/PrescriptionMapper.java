@@ -22,7 +22,6 @@ public class PrescriptionMapper {
     private final AppointmentService appointmentService;
 
     public Prescription createMap(CreatePrescription createPrescription){
-        User user = userService.findById(createPrescription.getUserId());
         Appointment appointment = appointmentService.findById(createPrescription.getAppointmentId())
                 .orElseThrow(() -> new RuntimeException("Appointment not found with id " + createPrescription.getAppointmentId()));
 
@@ -30,7 +29,6 @@ public class PrescriptionMapper {
         prescription.setDate(LocalDateTime.now());
         prescription.setMedicineName(createPrescription.getMedicineName());
         prescription.setDiagnosis(createPrescription.getDiagnosis());
-        prescription.setUser(user);
         prescription.setAppointment(appointment);
         prescription.setHashPrescription(generateHash());
         return prescription;

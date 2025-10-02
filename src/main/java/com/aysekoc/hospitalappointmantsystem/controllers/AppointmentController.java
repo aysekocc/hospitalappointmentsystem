@@ -6,7 +6,7 @@ import com.aysekoc.hospitalappointmantsystem.mapper.AppointmentMapper;
 import com.aysekoc.hospitalappointmantsystem.repositories.UserRepository;
 import com.aysekoc.hospitalappointmantsystem.services.abstracts.AppointmentService;
 import com.aysekoc.hospitalappointmantsystem.services.abstracts.DoctorService;
-import com.aysekoc.hospitalappointmantsystem.services.dtos.AppointmentDto.AppointmentDto;
+import com.aysekoc.hospitalappointmantsystem.services.concretes.UserServiceImpl;
 import com.aysekoc.hospitalappointmantsystem.services.dtos.AppointmentDto.AppointmentListDoctorDto;
 import com.aysekoc.hospitalappointmantsystem.services.dtos.AppointmentDto.AppointmentListUserDto;
 import com.aysekoc.hospitalappointmantsystem.services.dtos.AppointmentDto.CreateAppointment;
@@ -19,7 +19,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -38,11 +37,20 @@ public class AppointmentController {
     private final UserRepository userRepository;
     private final DoctorService doctorService;
     private final AppointmentMapper appointmentMapper;
+    private final UserServiceImpl userServiceImpl;
 
     @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_DOCTOR')")
     @PostMapping("/create")
-    public ResponseEntity<Void> createAppointment(@Valid @RequestBody CreateAppointment createAppointment) {
+    public ResponseEntity<Void> createAppointment(
+            @Valid @RequestBody CreateAppointment createAppointment,
+            @AuthenticationPrincipal UserDetails userDetails) {
+
+        User user = userServiceImpl.findByUsername(userDetails.getUsername())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        createAppointment.setUserId(user.getId());
         appointmentService.createAppointment(createAppointment);
+
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
@@ -77,7 +85,7 @@ public class AppointmentController {
     @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_DOCTOR')")
     @GetMapping("/my-appointments")
     public ResponseEntity<List<Appointment>> getUserAppointments(@Valid Authentication authentication) {
-        String username = authentication.getName(); // token’dan user çekiliyor
+        String username = authentication.getName();
         List<Appointment> appointments = appointmentService.findByUsername(username);
         return ResponseEntity.ok(appointments);
     }

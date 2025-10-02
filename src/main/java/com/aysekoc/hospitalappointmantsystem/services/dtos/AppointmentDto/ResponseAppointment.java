@@ -13,7 +13,6 @@ public class ResponseAppointment {
     private Long id;
     private LocalDateTime startedDate;
     private LocalDateTime endedDate;
-    private String status;
     private Long user;
     private String doctorName;
 

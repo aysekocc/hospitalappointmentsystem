@@ -6,14 +6,36 @@
       <h2 class="text-2xl mb-4 font-semibold text-white text-center">Randevu İşlemleri</h2>
 
       <form @submit.prevent="createAppointment" class="space-y-3">
-        <input type="datetime-local" v-model="appointment.startedDate" required class="input-field" />
-        <input type="datetime-local" v-model="appointment.endedDate" required class="input-field" />
-        <input type="number" v-model="appointment.doctor" placeholder="Doktor ID" required class="input-field" />
-        <input type="number" v-model="appointment.hospitalId" placeholder="Hastane ID" required class="input-field" />
 
+        <select v-model="appointment.specialist" required class="input-field mb-4">
+          <option value="">Poliklinik Seçiniz</option>
+          <option v-for="specialist in specialists" :key="specialist" :value="specialist">{{ specialist }}</option>
+        </select>
+
+        <!-- Doktor ve Hastane ID -->
+        <label class="block">
+          Doktor ID:
+          <input type="number" v-model.number="appointment.doctor" placeholder="Doktor ID" required class="input-field" />
+        </label>
+
+        <label>
+          Hastane ID:
+          <input type="number" v-model.number="appointment.hospitalId" placeholder="Hastane ID" required class="input-field" />
+        </label>
+        <!-- Başlangıç ve Bitiş -->
+        <label>
+          Başlangıç Tarihi:
+          <input type="datetime-local" v-model="appointment.startedDate" required class="input-field" />
+        </label>
+
+        <label>
+          Bitiş Tarihi:
+          <input type="datetime-local" v-model="appointment.endedDate" required class="input-field" />
+        </label>
 
         <button type="submit" class="btn-submit">Randevu Oluştur</button>
       </form>
+
 
       <p class="mt-4 text-green-400 font-medium" v-if="successMessage">{{ successMessage }}</p>
       <p class="mt-4 text-red-400 font-medium" v-if="errorMessage">{{ errorMessage }}</p>
@@ -38,8 +60,14 @@ export default {
         endedDate: "",
         doctor: null,
         hospitalId: null,
-        status: "",
+        clinic: ''
       },
+      clinics: [
+        'CARDIOLOGY', 'NEUROLOGY', 'DERMATOLOGY', 'PEDIATRICS',
+        'ORTHOPEDICS', 'GYNECOLOGY', 'UROLOGY', 'OPHTHALMOLOGY',
+        'ENT', 'DENTISTRY', 'PSYCHIATRY', 'GASTROENTEROLOGY',
+        'ONCOLOGY', 'PULMONOLOGY', 'NEPHROLOGY'
+      ],
       successMessage: "",
       errorMessage: "",
     };
@@ -64,7 +92,7 @@ export default {
           endedDate: "",
           doctor: null,
           hospitalId: null,
-          status: "",
+
         };
       } catch (err) {
         console.error(err);
@@ -111,7 +139,7 @@ export default {
   border-radius: 8px;
   border: 1px solid rgba(255,255,255,0.5);
   background: rgba(255,255,255,0.1);
-  color: white;
+  color: darkblue;
   outline: none;
   transition: 0.3s;
 }
@@ -139,7 +167,7 @@ export default {
 .btn-secondary {
   width: 100%;
   background: #6c757d;
-  color: white;
+  color: darkblue;
   padding: 10px 0;
   border-radius: 8px;
   font-weight: bold;

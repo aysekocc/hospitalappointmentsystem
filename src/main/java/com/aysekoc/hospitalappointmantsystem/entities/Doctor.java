@@ -52,6 +52,15 @@ public class Doctor {
     @JoinColumn(name="hospital_id")
     private Hospital hospital;
 
+    @ManyToMany(mappedBy = "doctors")
+    private Set<User> users;
+
+    @Column(name="appointment_id")
+    private Long appointmentId;
+
+    @Column(name="role")
+    @Enumerated(EnumType.STRING)
+    private Roles role;
 
 
 
