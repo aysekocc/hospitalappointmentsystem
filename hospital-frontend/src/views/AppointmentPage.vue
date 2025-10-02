@@ -7,10 +7,7 @@
 
       <form @submit.prevent="createAppointment" class="space-y-3">
 
-        <select v-model="appointment.specialist" required class="input-field mb-4">
-          <option value="">Poliklinik Seçiniz</option>
-          <option v-for="specialist in specialists" :key="specialist" :value="specialist">{{ specialist }}</option>
-        </select>
+
 
         <!-- Doktor ve Hastane ID -->
         <label class="block">
@@ -60,14 +57,8 @@ export default {
         endedDate: "",
         doctor: null,
         hospitalId: null,
-        clinic: ''
       },
-      clinics: [
-        'CARDIOLOGY', 'NEUROLOGY', 'DERMATOLOGY', 'PEDIATRICS',
-        'ORTHOPEDICS', 'GYNECOLOGY', 'UROLOGY', 'OPHTHALMOLOGY',
-        'ENT', 'DENTISTRY', 'PSYCHIATRY', 'GASTROENTEROLOGY',
-        'ONCOLOGY', 'PULMONOLOGY', 'NEPHROLOGY'
-      ],
+
       successMessage: "",
       errorMessage: "",
     };
