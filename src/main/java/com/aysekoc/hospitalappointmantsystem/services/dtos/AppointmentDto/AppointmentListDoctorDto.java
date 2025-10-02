@@ -1,10 +1,10 @@
 package com.aysekoc.hospitalappointmantsystem.services.dtos.AppointmentDto;
 
-import com.aysekoc.hospitalappointmantsystem.entities.Clinic;
-import jakarta.persistence.Column;
+import com.aysekoc.hospitalappointmantsystem.services.dtos.PrescriptionDto.PrescriptionListDto;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -23,6 +23,7 @@ public class AppointmentListDoctorDto {
     private Long hospitalId;
     private String town;
     private String townShip;
-    private Clinic clinic;
+    private List<PrescriptionListDto> prescriptions;
+
 
 }

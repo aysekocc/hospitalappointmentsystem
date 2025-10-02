@@ -3,7 +3,7 @@
     <div class="overlay"></div>
     <div class="content-container">
 
-      <h2 class="text-2xl mb-4 font-semibold text-white">Geçmiş Randevularım</h2>
+      <h2 class="text-2xl mb-4 font-semibold text-white">Randevularım</h2>
 
       <div v-if="loading" class="text-gray-200 text-center">Yükleniyor...</div>
       <div v-else-if="errorMessage" class="text-red-400 text-center">{{ errorMessage }}</div>
@@ -37,7 +37,7 @@
 
 
         <tbody>
-        <tr v-for="appt in pastAppointments" :key="appt.id" class="hover:bg-blue-100 hover:bg-opacity-30 transition-colors">
+        <tr v-for="appt in appointments" :key="appt.id" class="hover:bg-blue-100 hover:bg-opacity-30 transition-colors">
           <th class="border p-2">İşlem</th>
           <td class="border p-2">{{ formatDate(appt.startedDate) }}</td>
           <td class="border p-2">{{ formatDate(appt.endedDate) }}</td>

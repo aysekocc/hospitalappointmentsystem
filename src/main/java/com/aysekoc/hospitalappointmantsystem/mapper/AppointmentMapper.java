@@ -67,6 +67,12 @@ public class AppointmentMapper {
         } else {
             dto.setHospitalName("-");
         }
+        dto.setPrescriptionMedicineName(
+                appt.getPrescription() != null ? appt.getPrescription().getMedicineName() : null
+        );
+        dto.setPrescriptionDiagnosis(
+                appt.getPrescription() != null ? appt.getPrescription().getDiagnosis() : null
+        );
 
         return dto;
     }

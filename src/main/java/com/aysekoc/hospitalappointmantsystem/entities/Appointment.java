@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name="appointments")
@@ -37,6 +38,9 @@ public class Appointment {
     @ManyToOne
     @JoinColumn(name="hospital_id")
     private Hospital hospitalId;
+
+    @OneToOne(mappedBy = "appointment", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Prescription prescription;
 
 
 

@@ -4,39 +4,27 @@
     <div class="overlay"></div>
     <div class="content-container">
       <h2 class="text-2xl mb-4 font-semibold text-white text-center">Randevu İşlemleri</h2>
-
       <form @submit.prevent="createAppointment" class="space-y-3">
-
-
-
-        <!-- Doktor ve Hastane ID -->
         <label class="block">
           Doktor ID:
           <input type="number" v-model.number="appointment.doctor" placeholder="Doktor ID" required class="input-field" />
         </label>
-
         <label>
           Hastane ID:
           <input type="number" v-model.number="appointment.hospitalId" placeholder="Hastane ID" required class="input-field" />
         </label>
-        <!-- Başlangıç ve Bitiş -->
         <label>
           Başlangıç Tarihi:
           <input type="datetime-local" v-model="appointment.startedDate" required class="input-field" />
         </label>
-
         <label>
           Bitiş Tarihi:
           <input type="datetime-local" v-model="appointment.endedDate" required class="input-field" />
         </label>
-
         <button type="submit" class="btn-submit">Randevu Oluştur</button>
       </form>
-
-
       <p class="mt-4 text-green-400 font-medium" v-if="successMessage">{{ successMessage }}</p>
       <p class="mt-4 text-red-400 font-medium" v-if="errorMessage">{{ errorMessage }}</p>
-
       <div class="mt-6 text-center">
         <button @click="$router.push('/appointments/my-appointments')" class="btn-secondary">
           Geçmiş Randevularımı Gör
@@ -45,7 +33,6 @@
     </div>
   </div>
 </template>
-
 <script>
 import axios from "axios";
 
