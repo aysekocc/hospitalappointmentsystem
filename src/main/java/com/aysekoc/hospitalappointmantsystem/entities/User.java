@@ -38,6 +38,7 @@ public class User {
     private String gender;
 
     @Column(name="username")
+
     private String username;
 
     @Column(name="password")

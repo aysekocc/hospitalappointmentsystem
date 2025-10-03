@@ -5,21 +5,20 @@ import com.aysekoc.hospitalappointmantsystem.entities.Prescription;
 import com.aysekoc.hospitalappointmantsystem.entities.User;
 import com.aysekoc.hospitalappointmantsystem.services.abstracts.AppointmentService;
 import com.aysekoc.hospitalappointmantsystem.services.abstracts.UserService;
+import com.aysekoc.hospitalappointmantsystem.services.concretes.UserServiceImpl;
 import com.aysekoc.hospitalappointmantsystem.services.dtos.PrescriptionDto.CreatePrescription;
 import com.aysekoc.hospitalappointmantsystem.services.dtos.PrescriptionDto.PrescriptionListDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
-import java.util.Random;
 
 @RequiredArgsConstructor
 @Component
 public class PrescriptionMapper {
 
-    private final UserService userService;
     private final AppointmentService appointmentService;
+    private final UserService userService;
 
     public Prescription createMap(CreatePrescription createPrescription){
         Appointment appointment = appointmentService.findById(createPrescription.getAppointmentId())
@@ -31,6 +30,10 @@ public class PrescriptionMapper {
         prescription.setDiagnosis(createPrescription.getDiagnosis());
         prescription.setAppointment(appointment);
         prescription.setHashPrescription(generateHash());
+
+        User user = userService.findById(createPrescription.getUserId())
+                .orElseThrow(() -> new RuntimeException("User not found with id " + createPrescription.getUserId()));
+        prescription.setUser(user);
         return prescription;
     }
 
@@ -45,7 +48,8 @@ public class PrescriptionMapper {
                 prescription.getDiagnosis(),
                 prescription.getDate(),
                 prescription.getHashPrescription(),
-                prescription.getUser().getId()
+                prescription.getUser() != null ? prescription.getUser().getId() : null
+
         );
     }
 }

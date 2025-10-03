@@ -26,12 +26,12 @@
         <thead>
 
         <tr class="bg-blue-600 bg-opacity-70 text-white">
+          <th class="border p-2 w-8"></th>
           <th class="border p-2">Başlangıç</th>
           <th class="border p-2">Bitiş</th>
           <th class="border p-2">Hasta Adı</th>
           <th class="border p-2">Hastane Adı</th>
           <th class="border p-2">Doktor Adı</th>
-
         </tr>
         </thead>
 

@@ -40,9 +40,8 @@ public class Prescription {
     @JsonIgnore
     private User user;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "appointment_id")
-    @JsonIgnore
     private Appointment appointment;
 
 

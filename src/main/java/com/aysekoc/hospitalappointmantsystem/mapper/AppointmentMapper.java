@@ -1,9 +1,9 @@
 package com.aysekoc.hospitalappointmantsystem.mapper;
 
-import com.aysekoc.hospitalappointmantsystem.entities.Appointment;
-import com.aysekoc.hospitalappointmantsystem.entities.Doctor;
-import com.aysekoc.hospitalappointmantsystem.entities.Hospital;
-import com.aysekoc.hospitalappointmantsystem.entities.User;
+import com.aysekoc.hospitalappointmantsystem.entities.*;
+import com.aysekoc.hospitalappointmantsystem.services.abstracts.DoctorService;
+import com.aysekoc.hospitalappointmantsystem.services.abstracts.HospitalService;
+import com.aysekoc.hospitalappointmantsystem.services.abstracts.UserService;
 import com.aysekoc.hospitalappointmantsystem.services.concretes.DoctorServiceImpl;
 import com.aysekoc.hospitalappointmantsystem.services.concretes.HospitalServiceImpl;
 import com.aysekoc.hospitalappointmantsystem.services.concretes.UserServiceImpl;
@@ -17,24 +17,24 @@ import org.springframework.stereotype.Component;
 @Component
 public class AppointmentMapper {
 
-    private final DoctorServiceImpl doctorServiceImpl;
-    private final HospitalServiceImpl hospitalServiceImpl;
-    private final UserServiceImpl userServiceImpl;
+    private final DoctorService doctorService;
+    private final HospitalService hospitalService;
+    private final UserService userService;
 
     public Appointment createAppointment(CreateAppointment createAppointment) {
         Appointment appointment = new Appointment();
 
-        Doctor doctor = doctorServiceImpl.findById(createAppointment.getDoctor())
+        Doctor doctor = doctorService.findById(createAppointment.getDoctor())
                 .orElseThrow(() -> new RuntimeException("Doctor not found"));
         appointment.setDoctor(doctor);
 
-        Hospital hospital = hospitalServiceImpl.findByIdMap(createAppointment.getHospitalId());
+        Hospital hospital = hospitalService.findByIdMap(createAppointment.getHospitalId());
         appointment.setHospitalId(hospital);
 
         appointment.setStartedDate(createAppointment.getStartedDate());
         appointment.setEndedDate(createAppointment.getEndedDate());
 
-        User user = userServiceImpl.findById(createAppointment.getUserId())
+        User user = userService.findById(createAppointment.getUserId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
         appointment.setUser(user);
 
@@ -44,36 +44,33 @@ public class AppointmentMapper {
 
     public AppointmentListUserDto mapToUserDto(Appointment appt) {
         AppointmentListUserDto dto = new AppointmentListUserDto();
+
         dto.setId(appt.getId());
         dto.setStartedDate(appt.getStartedDate());
         dto.setEndedDate(appt.getEndedDate());
-
-        if (appt.getUser() != null) {
-            dto.setUserName(appt.getUser().getUsername());
-        } else {
-            dto.setUserName("bu");
-        }
-
+        dto.setUserName(
+                appt.getUser() != null ? appt.getUser().getUsername() : "-"
+        );
         if (appt.getDoctor() != null) {
-            dto.setDoctorName(appt.getDoctor().getName());
+            dto.setDoctorName(appt.getDoctor().getUsername());
             dto.setTitle(appt.getDoctor().getTitle());
         } else {
             dto.setDoctorName("-");
             dto.setTitle("-");
         }
-
-        if (appt.getHospitalId() != null) {
-            dto.setHospitalName(appt.getHospitalId().getName());
+        dto.setHospitalName(
+                appt.getHospitalId() != null ? appt.getHospitalId().getName() : "-"
+        );
+        Prescription prescription = appt.getPrescription();
+        if (prescription != null) {
+            dto.setPrescriptionMedicineName(prescription.getMedicineName());
+            dto.setPrescriptionDiagnosis(prescription.getDiagnosis());
+            dto.setPrescriptionHash(prescription.getHashPrescription());
         } else {
-            dto.setHospitalName("-");
+            dto.setPrescriptionMedicineName("-");
+            dto.setPrescriptionDiagnosis("-");
+            dto.setPrescriptionHash("-");
         }
-        dto.setPrescriptionMedicineName(
-                appt.getPrescription() != null ? appt.getPrescription().getMedicineName() : null
-        );
-        dto.setPrescriptionDiagnosis(
-                appt.getPrescription() != null ? appt.getPrescription().getDiagnosis() : null
-        );
-
         return dto;
     }
 
@@ -86,7 +83,7 @@ public class AppointmentMapper {
 
         if (appt.getDoctor() != null) {
             dto.setDoctorId(appt.getDoctor().getId());
-            dto.setDoctorName(appt.getDoctor().getName());
+            dto.setDoctorName(appt.getDoctor().getUsername());
             dto.setDoctorTitle(appt.getDoctor().getTitle());
         } else {
             dto.setDoctorName("-");

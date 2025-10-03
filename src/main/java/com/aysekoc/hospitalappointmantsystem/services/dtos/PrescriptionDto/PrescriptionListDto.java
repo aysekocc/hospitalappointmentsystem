@@ -13,7 +13,7 @@ public class PrescriptionListDto {
     private String diagnosis;
     private LocalDateTime date;
     private String hashPrescription;
-    private Long user;
+    private Long userId;
 
 
 }

@@ -19,5 +19,5 @@ public class CreateDoctorDto {
 
     private Set<User> userId;
 
-    private Clinic clinic;
+
 }

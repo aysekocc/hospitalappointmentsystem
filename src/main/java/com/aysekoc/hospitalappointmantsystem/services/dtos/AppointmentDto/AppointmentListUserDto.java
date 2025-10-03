@@ -1,12 +1,8 @@
 package com.aysekoc.hospitalappointmantsystem.services.dtos.AppointmentDto;
 
-import com.aysekoc.hospitalappointmantsystem.entities.Clinic;
-import com.aysekoc.hospitalappointmantsystem.services.dtos.PrescriptionDto.PrescriptionListDto;
-import jakarta.persistence.Column;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -21,9 +17,9 @@ public class AppointmentListUserDto {
     private String doctorName;
     private String hospitalName;
     private String title;
-    private Clinic clinic;
     private String prescriptionMedicineName;
     private String prescriptionDiagnosis;
+    private String prescriptionHash;
 
 
 }
