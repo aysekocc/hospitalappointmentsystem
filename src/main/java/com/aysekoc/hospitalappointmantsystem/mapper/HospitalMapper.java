@@ -2,7 +2,7 @@ package com.aysekoc.hospitalappointmantsystem.mapper;
 
 import com.aysekoc.hospitalappointmantsystem.entities.Hospital;
 import com.aysekoc.hospitalappointmantsystem.services.dtos.HospitalDto.HospitalListDto;
-import com.aysekoc.hospitalappointmantsystem.services.dtos.doctor.DoctorListDto;
+import com.aysekoc.hospitalappointmantsystem.services.dtos.Doctor.DoctorListDto;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

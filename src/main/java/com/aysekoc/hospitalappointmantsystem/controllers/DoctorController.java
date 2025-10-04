@@ -2,9 +2,11 @@ package com.aysekoc.hospitalappointmantsystem.controllers;
 
 
 import com.aysekoc.hospitalappointmantsystem.services.abstracts.DoctorService;
+import com.aysekoc.hospitalappointmantsystem.services.dtos.Doctor.CreateDoctorDto;
+import com.aysekoc.hospitalappointmantsystem.services.dtos.Doctor.DoctorListDto;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

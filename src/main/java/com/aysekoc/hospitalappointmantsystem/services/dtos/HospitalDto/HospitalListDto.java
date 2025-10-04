@@ -1,6 +1,7 @@
 package com.aysekoc.hospitalappointmantsystem.services.dtos.HospitalDto;
 
-import com.aysekoc.hospitalappointmantsystem.services.dtos.doctor.DoctorListDto;
+import com.aysekoc.hospitalappointmantsystem.services.dtos.Doctor.DoctorListDto;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

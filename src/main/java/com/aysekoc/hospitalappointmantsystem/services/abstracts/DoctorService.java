@@ -1,6 +1,9 @@
 package com.aysekoc.hospitalappointmantsystem.services.abstracts;
 
 import com.aysekoc.hospitalappointmantsystem.entities.Doctor;
+import com.aysekoc.hospitalappointmantsystem.services.dtos.Doctor.CreateDoctorDto;
+import com.aysekoc.hospitalappointmantsystem.services.dtos.Doctor.DoctorListDto;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.Optional;

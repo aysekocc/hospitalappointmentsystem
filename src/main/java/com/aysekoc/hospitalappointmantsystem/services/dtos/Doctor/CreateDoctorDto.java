@@ -1,4 +1,4 @@
-package com.aysekoc.hospitalappointmantsystem.services.dtos.doctor;
+package com.aysekoc.hospitalappointmantsystem.services.dtos.Doctor;
 
 import lombok.*;
 

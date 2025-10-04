@@ -4,7 +4,7 @@ import com.aysekoc.hospitalappointmantsystem.entities.User;
 import com.aysekoc.hospitalappointmantsystem.services.dtos.UserDto.CreateUserRequest;
 import com.aysekoc.hospitalappointmantsystem.services.dtos.UserDto.UpdateUser;
 import com.aysekoc.hospitalappointmantsystem.services.dtos.UserDto.UserLoginRequest;
-import com.aysekoc.hospitalappointmantsystem.services.dtos.doctor.CreateDoctorDto;
+import com.aysekoc.hospitalappointmantsystem.services.dtos.Doctor.CreateDoctorDto;
 
 import java.util.List;
 import java.util.Map;
