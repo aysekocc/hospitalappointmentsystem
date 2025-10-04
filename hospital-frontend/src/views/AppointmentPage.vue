@@ -5,22 +5,37 @@
     <div class="content-container">
       <h2 class="text-2xl mb-4 font-semibold text-white text-center">Randevu İşlemleri</h2>
       <form @submit.prevent="createAppointment" class="space-y-3">
-        <label class="block">
-          Doktor ID:
-          <input type="number" v-model.number="appointment.doctor" placeholder="Doktor ID" required class="input-field" />
-        </label>
         <label>
           Hastane ID:
           <input type="number" v-model.number="appointment.hospitalId" placeholder="Hastane ID" required class="input-field" />
         </label>
+
+        <label>
+          Poliklinik:
+          <select v-model="appointment.specialty" class="input-field" required>
+            <option disabled value="">Branş Seçin</option>
+            <option v-for="spec in specialties" :key="spec" :value="spec">
+              {{ formatSpecialty(spec) }}
+            </option>
+          </select>
+        </label>
+
+
+        <label class="block">
+          Doktor ID:
+          <input type="number" v-model.number="appointment.doctor" placeholder="Doktor ID" required class="input-field" />
+        </label>
+
         <label>
           Başlangıç Tarihi:
           <input type="datetime-local" v-model="appointment.startedDate" required class="input-field" />
         </label>
+
         <label>
           Bitiş Tarihi:
           <input type="datetime-local" v-model="appointment.endedDate" required class="input-field" />
         </label>
+
         <button type="submit" class="btn-submit">Randevu Oluştur</button>
       </form>
       <p class="mt-4 text-green-400 font-medium" v-if="successMessage">{{ successMessage }}</p>
@@ -44,13 +59,30 @@ export default {
         endedDate: "",
         doctor: null,
         hospitalId: null,
+        specialty: "",
       },
+      specialties: [
+        "KARDIYOLOJI",
+        "DAHILIYE",
+        "ORTOPEDI",
+        "GOZ_HASTALIKLARI",
+        "KBB",
+        "BEYIN_CERRAHISI",
+        "DERMATOLOJI",
+        "COCUK_SAGLIGI",
+        "PSIKIYATRI",
+        "NOROLOJI",
+        "UROLOJI",
+      ],
 
       successMessage: "",
       errorMessage: "",
     };
   },
   methods: {
+    formatSpecialty(spec) {
+      return spec.replace(/_/g, " ");
+    },
     async createAppointment() {
       try {
         const token = localStorage.getItem("token");

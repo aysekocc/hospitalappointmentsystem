@@ -1,6 +1,7 @@
 package com.aysekoc.hospitalappointmantsystem.services.abstracts;
 
 import com.aysekoc.hospitalappointmantsystem.entities.Doctor;
+import com.aysekoc.hospitalappointmantsystem.entities.Specialty;
 import com.aysekoc.hospitalappointmantsystem.services.dtos.Doctor.CreateDoctorDto;
 import com.aysekoc.hospitalappointmantsystem.services.dtos.Doctor.DoctorListDto;
 import org.springframework.data.domain.Page;
@@ -17,6 +18,7 @@ public interface DoctorService {
     Optional<Doctor> findById(Long id);
     Optional<Doctor> findByUsername(String username);
     List<Doctor> getAllDoctors();
+    Optional<Doctor> findFirstBySpecialty(Specialty specialty);
 
 
 }

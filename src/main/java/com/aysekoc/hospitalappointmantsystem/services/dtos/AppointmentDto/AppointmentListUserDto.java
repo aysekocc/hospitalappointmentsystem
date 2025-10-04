@@ -1,5 +1,6 @@
 package com.aysekoc.hospitalappointmantsystem.services.dtos.AppointmentDto;
 
+import com.aysekoc.hospitalappointmantsystem.entities.Specialty;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -20,6 +21,7 @@ public class AppointmentListUserDto {
     private String prescriptionMedicineName;
     private String prescriptionDiagnosis;
     private String prescriptionHash;
+    private Specialty specialty;
 
 
 }

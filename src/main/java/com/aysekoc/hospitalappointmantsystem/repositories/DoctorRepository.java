@@ -17,6 +17,7 @@ public interface DoctorRepository extends JpaRepository<Doctor, Long> {
     List<Doctor> findByTitle(String title);
     List<Doctor> findByGender(boolean gender);  // true/false
     Page<Doctor> findAll(Pageable pageable);
+    Optional<Doctor> findFirstBySpecialty(Specialty specialty);
     Optional<Doctor> findByUsername(String username);
 
 }

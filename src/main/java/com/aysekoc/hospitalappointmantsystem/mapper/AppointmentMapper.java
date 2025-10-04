@@ -27,9 +27,21 @@ public class AppointmentMapper {
     public Appointment createAppointment(CreateAppointment createAppointment) {
         Appointment appointment = new Appointment();
 
-        Doctor doctor = doctorService.findById(createAppointment.getDoctor())
-                .orElseThrow(() -> new RuntimeException("Doctor not found"));
+        Doctor doctor = null;
+        if (createAppointment.getDoctor() != null) {
+            doctor = doctorService.findById(createAppointment.getDoctor())
+                    .orElseThrow(() -> new RuntimeException("Doctor not found with id: " + createAppointment.getDoctor()));
+        }
+
+        else if (createAppointment.getSpecialty() != null) {
+            doctor = doctorService.findFirstBySpecialty(createAppointment.getSpecialty())
+                    .orElseThrow(() -> new RuntimeException("Doctor not found for specialty: " + createAppointment.getSpecialty()));
+        } else {
+            throw new RuntimeException("Either doctorId or specialty must be provided.");
+        }
+
         appointment.setDoctor(doctor);
+
 
         Hospital hospital = hospitalService.findByIdMap(createAppointment.getHospitalId());
         appointment.setHospitalId(hospital);
@@ -60,9 +72,11 @@ public class AppointmentMapper {
         if (appt.getDoctor() != null) {
             dto.setDoctorName(appt.getDoctor().getUsername());
             dto.setTitle(appt.getDoctor().getTitle());
+            dto.setSpecialty(appt.getDoctor().getSpecialty());
         } else {
             dto.setDoctorName("-");
             dto.setTitle("-");
+            dto.setSpecialty(null);
         }
 
         if (appt.getHospitalId() != null) {
