@@ -7,7 +7,7 @@ pipeline {
     }
 
     environment {
-        DOCKERHUB_USER = 'aysekoc481'
+        DOCKERHUB_USER = 'ayse33'
         DOCKERHUB_PASS = credentials('dockerhub-credentials')
         BACKEND_IMAGE = "hospitalappointmentsystem-backend"
     }
