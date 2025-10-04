@@ -9,6 +9,7 @@ pipeline {
     environment {
         DOCKERHUB_USER = 'aysekoc481'
         DOCKERHUB_PASS = credentials('dockerhub-credentials')
+        BACKEND_IMAGE = "hospitalappointmentsystem-backend"
     }
 
     stages {
@@ -20,7 +21,7 @@ pipeline {
 
         stage('Build Backend') {
             steps {
-                dir('hospitalappointmentsystem') {  // pom.xml burada
+                dir('hospitalappointmentsystem') {
                     bat 'mvn clean package -DskipTests'
                 }
             }
@@ -35,26 +36,26 @@ pipeline {
             }
         }
 
-        stage('Docker Build & Push') {
+        stage('Docker Build & Push Backend') {
             steps {
-                script {
-                    bat """
-                    echo %DOCKERHUB_PASS% | docker login -u %DOCKERHUB_USER% --password-stdin
-
-                    docker build -t %DOCKERHUB_USER%/hospitalappointmentsystem-backend:latest -f hospitalappointmentsystem\\Dockerfile hospitalappointmentsystem
-                    docker push %DOCKERHUB_USER%/hospitalappointmentsystem-backend:latest
-
-                    docker build -t %DOCKERHUB_USER%/hospitalappointmentsystem-frontend:latest -f hospitalappointmentsystem\\hospital-frontend\\Dockerfile hospitalappointmentsystem\\hospital-frontend
-                    docker push %DOCKERHUB_USER%/hospitalappointmentsystem-frontend:latest
-                    """
+                dir('hospitalappointmentsystem') {
+                    script {
+                        bat """
+                        echo %DOCKERHUB_PASS% | docker login -u %DOCKERHUB_USER% --password-stdin
+                        docker build -t %DOCKERHUB_USER%/%BACKEND_IMAGE%:latest .
+                        docker push %DOCKERHUB_USER%/%BACKEND_IMAGE%:latest
+                        """
+                    }
                 }
             }
         }
 
         stage('Deploy') {
             steps {
-                bat 'docker-compose down || exit /b 0'
-                bat 'docker-compose up -d'
+                script {
+                    bat 'docker-compose down || exit 0'
+                    bat 'docker-compose up -d'
+                }
             }
         }
     }
