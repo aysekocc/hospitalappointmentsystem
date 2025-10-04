@@ -10,6 +10,7 @@ pipeline {
         DOCKERHUB_USER = 'aysekoc481'
         DOCKERHUB_PASS = credentials('dockerhub-credentials')
         BACKEND_IMAGE = "hospitalappointmentsystem-backend"
+        PATH = "${tool 'Maven3'}\\bin;${tool 'JDK21'}\\bin;%PATH%"
     }
 
     stages {
@@ -21,15 +22,14 @@ pipeline {
 
         stage('Build Backend') {
             steps {
-                dir('hospitalappointmentsystem') {
-                    bat 'mvn clean package -DskipTests'
-                }
+                // hospitalappointmentsystem ana klasöründe pom.xml var
+                bat 'mvn clean package -DskipTests'
             }
         }
 
         stage('Build Frontend') {
             steps {
-                dir('hospitalappointmentsystem\\hospital-frontend') {
+                dir('hospital-frontend') {
                     bat 'npm install'
                     bat 'npm run build'
                 }
@@ -38,14 +38,12 @@ pipeline {
 
         stage('Docker Build & Push Backend') {
             steps {
-                dir('hospitalappointmentsystem') {
-                    script {
-                        bat """
-                        echo %DOCKERHUB_PASS% | docker login -u %DOCKERHUB_USER% --password-stdin
-                        docker build -t %DOCKERHUB_USER%/%BACKEND_IMAGE%:latest .
-                        docker push %DOCKERHUB_USER%/%BACKEND_IMAGE%:latest
-                        """
-                    }
+                script {
+                    bat """
+                    echo %DOCKERHUB_PASS% | docker login -u %DOCKERHUB_USER% --password-stdin
+                    docker build -t %DOCKERHUB_USER%/%BACKEND_IMAGE%:latest -f Dockerfile .
+                    docker push %DOCKERHUB_USER%/%BACKEND_IMAGE%:latest
+                    """
                 }
             }
         }
