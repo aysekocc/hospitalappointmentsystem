@@ -23,7 +23,7 @@ pipeline {
 
         stage('Build Backend') {
             steps {
-                dir('backend') {
+                dir('hospitalappointmentsystem') {
                     bat 'mvn clean package -DskipTests'
                 }
             }
@@ -41,10 +41,10 @@ pipeline {
         stage('Docker Build & Push') {
             steps {
                 script {
-                    // Windows için Docker login
+
                     bat """
                     echo %DOCKERHUB_PASS% | docker login -u %DOCKERHUB_USER% --password-stdin
-                    docker build -t %DOCKERHUB_USER%/%BACKEND_IMAGE%:latest -f backend/Dockerfile backend
+                    docker build -t %DOCKERHUB_USER%/%BACKEND_IMAGE%:latest -f hospitalappointmentsystem/Dockerfile
                     docker push %DOCKERHUB_USER%/%BACKEND_IMAGE%:latest
                     docker build -t %DOCKERHUB_USER%/%FRONTEND_IMAGE%:latest -f hospital-frontend/Dockerfile hospital-frontend
                     docker push %DOCKERHUB_USER%/%FRONTEND_IMAGE%:latest
