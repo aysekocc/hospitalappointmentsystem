@@ -1,4 +1,16 @@
 services:
+  jenkins:
+    image: jenkins/jenkins:lts
+    container_name: jenkins
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - elk-network
+
   db-hospitalappointmentsystem:
     image: postgres:16
     restart: always
@@ -15,6 +27,7 @@ services:
       - elk-network
 
 volumes:
+  jenkins_home:
   another_postgres_data:
 
 networks:

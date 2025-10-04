@@ -8,16 +8,15 @@ pipeline {
 
     environment {
         DOCKERHUB_USER = 'ayse33'
-        DOCKERHUB_PASS = credentials('dockerhub-credentials')
         BACKEND_IMAGE = "hospitalappointmentsystem-backend"
-        PATH = "${tool 'Maven3'}\\bin;${tool 'JDK21'}\\bin;%PATH%"
     }
 
-    stage('Checkout') {
-        steps {
-            sh 'git clone -b master https://github.com/aysekocc/hospitalappointmentsystem.git'
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'master', url: 'https://github.com/aysekocc/hospitalappointmentsystem.git'
+            }
         }
-    }
 
         stage('Build Backend') {
             steps {
@@ -36,7 +35,7 @@ pipeline {
 
         stage('Docker Build & Push Backend') {
             steps {
-                script {
+                withCredentials([string(credentialsId: 'dockerhub-credentials', variable: 'DOCKERHUB_PASS')]) {
                     bat """
                     echo %DOCKERHUB_PASS% | docker login -u %DOCKERHUB_USER% --password-stdin
                     docker build -t %DOCKERHUB_USER%/%BACKEND_IMAGE%:latest -f Dockerfile .
@@ -48,10 +47,8 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                script {
-                    bat 'docker-compose down || exit 0'
-                    bat 'docker-compose up -d'
-                }
+                bat 'docker-compose down || exit 0'
+                bat 'docker-compose up -d'
             }
         }
     }
