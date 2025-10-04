@@ -1,6 +1,12 @@
 package com.aysekoc.hospitalappointmantsystem.services.dtos.Doctor;
 
-import lombok.*;
+import com.aysekoc.hospitalappointmantsystem.entities.Specialty;
+import com.aysekoc.hospitalappointmantsystem.entities.User;
+import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter

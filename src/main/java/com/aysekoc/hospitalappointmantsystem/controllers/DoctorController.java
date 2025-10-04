@@ -8,6 +8,10 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import com.aysekoc.hospitalappointmantsystem.entities.Doctor;
+import com.aysekoc.hospitalappointmantsystem.services.abstracts.AppointmentService;
+import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
