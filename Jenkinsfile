@@ -23,7 +23,7 @@ pipeline {
 
         stage('Build Backend') {
             steps {
-                dir('hospitalappointmentsystem') {
+                dir('backend') {
                     bat 'mvn clean package -DskipTests'
                 }
             }
@@ -31,7 +31,7 @@ pipeline {
 
         stage('Build Frontend') {
             steps {
-                dir('hospital-frontend') {
+                dir('frontend') {  // frontend dizini GitHub'daki adıyla
                     bat 'npm install'
                     bat 'npm run build'
                 }
@@ -41,12 +41,11 @@ pipeline {
         stage('Docker Build & Push') {
             steps {
                 script {
-
                     bat """
                     echo %DOCKERHUB_PASS% | docker login -u %DOCKERHUB_USER% --password-stdin
-                    docker build -t %DOCKERHUB_USER%/%BACKEND_IMAGE%:latest -f hospitalappointmentsystem/Dockerfile
+                    docker build -t %DOCKERHUB_USER%/%BACKEND_IMAGE%:latest -f backend/Dockerfile backend
                     docker push %DOCKERHUB_USER%/%BACKEND_IMAGE%:latest
-                    docker build -t %DOCKERHUB_USER%/%FRONTEND_IMAGE%:latest -f hospital-frontend/Dockerfile hospital-frontend
+                    docker build -t %DOCKERHUB_USER%/%FRONTEND_IMAGE%:latest -f frontend/Dockerfile frontend
                     docker push %DOCKERHUB_USER%/%FRONTEND_IMAGE%:latest
                     """
                 }
@@ -56,7 +55,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    bat 'docker-compose down || exit 0'
+                    bat 'docker-compose down || exit /b 0'
                     bat 'docker-compose up -d'
                 }
             }
