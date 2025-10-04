@@ -10,6 +10,7 @@ pipeline {
         DOCKERHUB_USER = 'ayse33'
         DOCKERHUB_PASS = credentials('dockerhub-credentials')
         BACKEND_IMAGE = "hospitalappointmentsystem-backend"
+        PATH = "${tool 'Maven3'}\\bin;${tool 'JDK21'}\\bin;%PATH%"
     }
 
     stages {
