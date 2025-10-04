@@ -78,4 +78,10 @@ public class PrescriptionServiceImpl implements PrescriptionService {
         return String.valueOf(code);
     }
 
+
+    @Override
+    public Optional<PrescriptionListDto> findByAppointmentId(Long appointmentId) {
+        return prescriptionRepository.findByAppointmentId(appointmentId)
+                .map(PrescriptionMapper::toDto);
+    }
 }

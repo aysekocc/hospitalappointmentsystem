@@ -33,8 +33,8 @@ public class Doctor {
     @Column(name="username")
     private String username;
 
-    @Column(name="specialty")
-    private String specialty;
+    @Enumerated(EnumType.STRING)
+    private Specialty specialty;
 
     @Column(name="title")
     private String title;

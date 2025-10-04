@@ -29,6 +29,7 @@ public class PrescriptionController {
     @PreAuthorize("hasRole('ROLE_DOCTOR')")
     @PostMapping("/create")
     public void createPrescription(@RequestBody CreatePrescription createPrescription) {
+        System.out.println("Backend'e gelen prescription DTO: " + createPrescription);
         prescriptionService.create(createPrescription);
     }
 
@@ -43,6 +44,13 @@ public class PrescriptionController {
     @GetMapping("/list/user")
     public Page<PrescriptionListDto> findById(@Valid @RequestParam Long userId, Pageable pageable) {
         return prescriptionService.findById(userId, pageable);
+    }
+
+    @GetMapping("/list/by-appointment/{appointmentId}")
+    @PreAuthorize("hasAnyRole('ROLE_DOCTOR','ROLE_USER')")
+    public ResponseEntity<PrescriptionListDto> getByAppointment(@PathVariable Long appointmentId) {
+        Optional<PrescriptionListDto> prescription = prescriptionService.findByAppointmentId(appointmentId);
+        return prescription.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.ok(null));
     }
 
     @PreAuthorize("hasRole('ROLE_DOCTOR')")

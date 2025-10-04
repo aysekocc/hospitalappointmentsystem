@@ -17,5 +17,7 @@ public interface PrescriptionService {
     void deleteById (Long id);
     Optional<Prescription> findByHashPrescription(String hash);
     Page<PrescriptionListDto> findById(Long id, Pageable pageable);
+    Optional<PrescriptionListDto> findByAppointmentId(Long appointmentId);
+
 
 }

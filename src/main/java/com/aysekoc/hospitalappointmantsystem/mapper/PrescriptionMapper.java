@@ -31,9 +31,8 @@ public class PrescriptionMapper {
         prescription.setAppointment(appointment);
         prescription.setHashPrescription(generateHash());
 
-        User user = userService.findById(createPrescription.getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found with id " + createPrescription.getUserId()));
-        prescription.setUser(user);
+        prescription.setUser(appointment.getUser());
+
         return prescription;
     }
 

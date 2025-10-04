@@ -1,6 +1,9 @@
 package com.aysekoc.hospitalappointmantsystem.mapper;
 
-import com.aysekoc.hospitalappointmantsystem.entities.*;
+import com.aysekoc.hospitalappointmantsystem.entities.Appointment;
+import com.aysekoc.hospitalappointmantsystem.entities.Doctor;
+import com.aysekoc.hospitalappointmantsystem.entities.Hospital;
+import com.aysekoc.hospitalappointmantsystem.entities.User;
 import com.aysekoc.hospitalappointmantsystem.services.abstracts.DoctorService;
 import com.aysekoc.hospitalappointmantsystem.services.abstracts.HospitalService;
 import com.aysekoc.hospitalappointmantsystem.services.abstracts.UserService;
@@ -44,13 +47,16 @@ public class AppointmentMapper {
 
     public AppointmentListUserDto mapToUserDto(Appointment appt) {
         AppointmentListUserDto dto = new AppointmentListUserDto();
-
         dto.setId(appt.getId());
         dto.setStartedDate(appt.getStartedDate());
         dto.setEndedDate(appt.getEndedDate());
-        dto.setUserName(
-                appt.getUser() != null ? appt.getUser().getUsername() : "-"
-        );
+
+        if (appt.getUser() != null) {
+            dto.setUserName(appt.getUser().getUsername());
+        } else {
+            dto.setUserName("bu");
+        }
+
         if (appt.getDoctor() != null) {
             dto.setDoctorName(appt.getDoctor().getUsername());
             dto.setTitle(appt.getDoctor().getTitle());
@@ -58,19 +64,22 @@ public class AppointmentMapper {
             dto.setDoctorName("-");
             dto.setTitle("-");
         }
-        dto.setHospitalName(
-                appt.getHospitalId() != null ? appt.getHospitalId().getName() : "-"
-        );
-        Prescription prescription = appt.getPrescription();
-        if (prescription != null) {
-            dto.setPrescriptionMedicineName(prescription.getMedicineName());
-            dto.setPrescriptionDiagnosis(prescription.getDiagnosis());
-            dto.setPrescriptionHash(prescription.getHashPrescription());
+
+        if (appt.getHospitalId() != null) {
+            dto.setHospitalName(appt.getHospitalId().getName());
         } else {
-            dto.setPrescriptionMedicineName("-");
-            dto.setPrescriptionDiagnosis("-");
-            dto.setPrescriptionHash("-");
+            dto.setHospitalName("-");
         }
+        dto.setPrescriptionMedicineName(
+                appt.getPrescription() != null ? appt.getPrescription().getMedicineName() : null
+        );
+        dto.setPrescriptionDiagnosis(
+                appt.getPrescription() != null ? appt.getPrescription().getDiagnosis() : null
+        );
+        dto.setPrescriptionHash(
+                appt.getPrescription() != null ? appt.getPrescription().getHashPrescription() : null
+        );
+
         return dto;
     }
 

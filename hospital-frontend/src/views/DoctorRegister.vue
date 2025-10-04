@@ -8,7 +8,20 @@
         <input v-model="surname" placeholder="Soyad" required />
         <input v-model="password" type="password" placeholder="Şifre" required />
         <input v-model="username" placeholder="Kullanıcı Adı" required />
-        <input v-model="specialty" placeholder="Uzmanlık" required />
+        <select v-model="specialty" required>
+          <option disabled value="">Uzmanlık Seçiniz</option>
+          <option value="KARDIYOLOJI">Kardiyoloji</option>
+          <option value="DAHILIYE">Dahiliye</option>
+          <option value="ORTOPEDI">Ortopedi</option>
+          <option value="GOZ_HASTALIKLARI">Göz Hastalıkları</option>
+          <option value="KBB">Kulak Burun Boğaz</option>
+          <option value="BEYIN_CERRAHISI">Beyin Cerrahisi</option>
+          <option value="DERMATOLOJI">Dermatoloji</option>
+          <option value="COCUK_SAGLIGI">Çocuk Sağlığı</option>
+          <option value="PSIKIYATRI">Psikiyatri</option>
+          <option value="NOROLOJI">Nöroloji</option>
+          <option value="UROLOJI">Üroloji</option>
+        </select>
         <input v-model="title" placeholder="Ünvan" required />
         <select v-model="gender" required>
           <option :value="true">Erkek</option>

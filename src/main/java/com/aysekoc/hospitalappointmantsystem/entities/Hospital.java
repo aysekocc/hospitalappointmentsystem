@@ -31,9 +31,6 @@ public class Hospital {
     @Column(name="township")
     private String township;
 
-    @Column(name="clinic")
-    private String clinic;
-
     @OneToMany(mappedBy = "hospital")
     private List<Doctor> doctors;
 

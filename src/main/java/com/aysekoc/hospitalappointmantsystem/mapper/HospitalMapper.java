@@ -24,7 +24,7 @@ public class HospitalMapper {
                 hospital.getName(),
                 hospital.getTown(),
                 hospital.getTownship(),
-                hospital.getClinic(),
+
                 doctorDtos
         );
     }

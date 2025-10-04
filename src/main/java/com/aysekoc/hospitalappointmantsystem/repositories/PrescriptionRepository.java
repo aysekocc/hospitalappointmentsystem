@@ -18,5 +18,6 @@ public interface PrescriptionRepository extends JpaRepository<Prescription, Long
     Page<Prescription> findByUserId(Long id, Pageable pageable);
     Optional<Prescription> findByHashPrescription(String hash);
     List<Prescription> findByDateBetween(LocalDateTime startDate, LocalDateTime endDate);
+    Optional<Prescription> findByAppointmentId(Long appointmentId);
 
 }
