@@ -13,5 +13,5 @@ public class DoctorListDto {
     private String surname;
     private String specialty;
     private String title;
-    //deneme
+
 }

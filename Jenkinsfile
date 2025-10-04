@@ -10,7 +10,6 @@ pipeline {
         DOCKERHUB_USER = 'aysekoc481'
         DOCKERHUB_PASS = credentials('dockerhub-credentials')
         BACKEND_IMAGE = "hospitalappointmentsystem-backend"
-        PATH = "${tool 'Maven3'}\\bin;${tool 'JDK21'}\\bin;%PATH%"
     }
 
     stages {
@@ -22,7 +21,6 @@ pipeline {
 
         stage('Build Backend') {
             steps {
-                // hospitalappointmentsystem ana klasöründe pom.xml var
                 bat 'mvn clean package -DskipTests'
             }
         }
