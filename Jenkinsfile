@@ -13,12 +13,11 @@ pipeline {
         PATH = "${tool 'Maven3'}\\bin;${tool 'JDK21'}\\bin;%PATH%"
     }
 
-    stages {
-        stage('Checkout') {
-            steps {
-                git branch: 'master', url: 'https://github.com/aysekocc/hospitalappointmentsystem.git'
-            }
+    stage('Checkout') {
+        steps {
+            sh 'git clone -b master https://github.com/aysekocc/hospitalappointmentsystem.git'
         }
+    }
 
         stage('Build Backend') {
             steps {
