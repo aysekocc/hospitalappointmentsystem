@@ -1,15 +1,16 @@
 pipeline {
-    agent any   // Pipeline herhangi bir node üzerinde çalışabilir
+    agent any
 
     tools {
-        maven 'Maven3' // Jenkins'te Maven tanımlı olmalı
-        jdk 'JDK17'    // Jenkins'te JDK tanımlı olmalı
+        maven 'Maven3'
+        jdk 'JDK17'
     }
 
     environment {
-        DOCKERHUB_USER = 'senin_dockerhub_username'
-        DOCKERHUB_PASS = credentials('dockerhub-credentials') // Jenkins Credentials kısmına ekleyeceksin
-        IMAGE_NAME = "randevu-sistemi"
+        DOCKERHUB_USER = 'aysekoc481'
+        DOCKERHUB_PASS = credentials('dockerhub-credentials')
+        BACKEND_IMAGE = "hospitalappointmentsystem-backend"
+        FRONTEND_IMAGE = "hospitalappointmentsystem-frontend"
     }
 
     stages {
@@ -40,8 +41,12 @@ pipeline {
             steps {
                 script {
                     sh "echo $DOCKERHUB_PASS | docker login -u $DOCKERHUB_USER --password-stdin"
-                    sh "docker build -t $DOCKERHUB_USER/$IMAGE_NAME:latest ."
-                    sh "docker push $DOCKERHUB_USER/$IMAGE_NAME:latest"
+
+                    sh "docker build -t $DOCKERHUB_USER/$BACKEND_IMAGE:latest -f backend/Dockerfile backend"
+                    sh "docker push $DOCKERHUB_USER/$BACKEND_IMAGE:latest"
+
+                    sh "docker build -t $DOCKERHUB_USER/$FRONTEND_IMAGE:latest -f frontend/Dockerfile frontend"
+                    sh "docker push $DOCKERHUB_USER/$FRONTEND_IMAGE:latest"
                 }
             }
         }
@@ -49,7 +54,6 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    // Eğer sunucuda docker-compose varsa
                     sh 'docker-compose down || true'
                     sh 'docker-compose up -d'
                 }
@@ -59,10 +63,10 @@ pipeline {
 
     post {
         success {
-            echo '🎉 Pipeline başarıyla tamamlandı!'
+            echo 'Pipeline başarıyla tamamlandı!'
         }
         failure {
-            echo '❌ Pipeline hata aldı!'
+            echo 'Pipeline hata aldı!'
         }
     }
 }
