@@ -8,6 +8,7 @@ import com.aysekoc.hospitalappointmantsystem.services.dtos.AppointmentDto.Create
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -16,9 +17,9 @@ public interface AppointmentService {
     Page<Appointment> getAppointments(int pageNumber, int pageSize);
     String createAppointment(CreateAppointment createAppointment);
     Optional<Appointment> findById(Long id);
-    List<Appointment> findByStartDate(LocalDateTime startDate);
+    List<Appointment> findByStartDate(LocalDate startDate);
     List<Appointment> findByUsername(String username);
-    List<Appointment> findByEndDate(LocalDateTime endDate);
+    List<Appointment> findByEndDate(LocalDate endDate);
     List<Appointment> findAll();
     void deleteAppointment(Long appointmentId);
     List<AppointmentListUserDto> userList(Long userId);

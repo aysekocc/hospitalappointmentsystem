@@ -3,7 +3,7 @@ package com.aysekoc.hospitalappointmantsystem.services.dtos.AppointmentDto;
 import com.aysekoc.hospitalappointmantsystem.entities.Specialty;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
@@ -12,8 +12,8 @@ import java.time.LocalDateTime;
 @Setter
 public class AppointmentListUserDto {
     private Long id;
-    private LocalDateTime startedDate;
-    private LocalDateTime endedDate;
+    private LocalDate startedDate;
+    private LocalDate endedDate;
     private String userName;
     private String doctorName;
     private String hospitalName;

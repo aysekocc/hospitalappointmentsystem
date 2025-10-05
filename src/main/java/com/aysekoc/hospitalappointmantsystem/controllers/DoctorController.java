@@ -21,7 +21,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DoctorController {
     private final DoctorService doctorService;
-    private final AppointmentService appointmentService;
 
     @PreAuthorize("hasRole('ROLE_DOCTOR')")
     @PostMapping("/create")
@@ -53,11 +52,10 @@ public class DoctorController {
                                        @RequestParam(defaultValue = "0") int page) {
         return doctorService.findAll(size, page);
     }
-
+    @PreAuthorize("hasAnyRole('ROLE_DOCTOR','ROLE_USER')")
     @GetMapping("/all")
-    public ResponseEntity<List<Doctor>> getAllDoctors() {
-        List<Doctor> doctors = doctorService.getAllDoctors();
-        return ResponseEntity.ok(doctors);
+    public List<DoctorListDto> getAllDoctors() {
+        return doctorService.getAllDoctors();
     }
 
 

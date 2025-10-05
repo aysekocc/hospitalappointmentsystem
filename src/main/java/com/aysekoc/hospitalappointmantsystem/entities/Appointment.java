@@ -5,8 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import java.time.LocalDateTime;
-import java.util.List;
+
+import java.time.LocalDate;
 
 @Entity
 @Table(name="appointments")
@@ -22,10 +22,10 @@ public class Appointment {
     private Long id;
 
     @Column(name="started_date")
-    private LocalDateTime startedDate;
+    private LocalDate startedDate;
 
     @Column(name="ended_date")
-    private LocalDateTime endedDate;
+    private LocalDate endedDate;
 
     @ManyToOne
     @JoinColumn(name="user_id")

@@ -9,6 +9,20 @@
         <button type="submit">Login</button>
       </form>
       <p>{{ message }}</p>
+
+      <button
+        v-if="roleParam === 'doctor'"
+        class="back-btn"
+        @click="goBack">
+        ← Ana Sayfaya Dön
+      </button>
+
+      <button
+        v-if="roleParam === 'user'"
+        class="back-btn"
+        @click="goBack">
+        ← Ana Sayfaya Dön
+      </button>
     </div>
   </div>
 </template>
@@ -44,13 +58,12 @@ export default {
         const token = res.data.token;
         const userId = res.data.userId;
 
-        console.log("Token:", token, "Role:", role, "UserId:", userId);
-
         localStorage.setItem("token", token);
         localStorage.setItem("role", role);
         localStorage.setItem("userId", userId);
 
-        if (this.roleParam && ((this.roleParam === "doctor" && role !== "ROLE_DOCTOR") || (this.roleParam === "user" && role !== "ROLE_USER"))) {
+        if (this.roleParam && ((this.roleParam === "doctor" && role !== "ROLE_DOCTOR") ||
+          (this.roleParam === "user" && role !== "ROLE_USER"))) {
           this.message = "Giriş yetkiniz yok!";
           return;
         }
@@ -65,15 +78,16 @@ export default {
         console.error(err);
         this.message = err.response?.data?.message || 'Login failed!';
       }
+    },
+
+    goBack() {
+      this.$router.push('/');
     }
-
-
   }
 };
 </script>
 
 <style scoped>
-/* Sayfa arka planı */
 .login-page {
   display: flex;
   justify-content: center;
@@ -141,6 +155,15 @@ export default {
 
 .login-container button:hover {
   background: #6bc1ff;
+}
+
+.back-btn {
+  margin-top: 15px;
+  background: #28a745;
+}
+
+.back-btn:hover {
+  background: #1e7e34;
 }
 
 .login-container p {

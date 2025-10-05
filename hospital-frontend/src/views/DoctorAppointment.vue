@@ -1,22 +1,37 @@
 <template>
-  <div class="appointment-list-page p-6 max-w-5xl mx-auto relative">
+  <div class="doctor-appointment-page p-6 max-w-5xl mx-auto relative">
     <div class="overlay"></div>
     <div class="content-container">
 
-      <!-- WELCOME SCREEN -->
       <div v-if="showWelcome" class="welcome-screen flex flex-col items-center justify-center h-screen text-white text-center">
         <h1 class="text-4xl font-bold mb-6">Doktor Ekranına Hoş Geldiniz!</h1>
         <p class="mb-6">Randevularınızı görüntülemek için butona tıklayın.</p>
-        <button
-          @click="showWelcome = false; fetchAppointments()"
-          class="px-6 py-3 rounded-lg bg-gradient-to-r from-blue-400 to-blue-200 hover:from-blue-200 hover:to-blue-400 font-bold">
-          Randevuları Görüntüle
-        </button>
+        <div class="flex flex-col gap-4">
+          <button
+            @click="showWelcome = false; fetchAppointments()"
+            class="btn-appointments">
+            Randevuları Görüntüle
+          </button>
+
+
+          <button
+            @click="$router.push('/')"
+            class="btn-home">
+            Anasayfaya Dön
+          </button>
+        </div>
       </div>
 
-      <!-- APPOINTMENT LIST -->
       <div v-else>
-        <h2 class="text-2xl mb-4 font-semibold text-white">Randevularım</h2>
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-2xl font-semibold text-white">Randevularım</h2>
+
+          <button
+            @click="goBackToWelcome"
+            class="flex justify-end gap-2">
+            ← Geri Dön
+          </button>
+        </div>
 
         <div v-if="loading" class="text-gray-200 text-center">Yükleniyor...</div>
         <div v-else-if="errorMessage" class="text-red-400 text-center">{{ errorMessage }}</div>
@@ -25,12 +40,12 @@
           <div class="bg-white p-6 rounded-lg shadow-md w-96">
             <h3 class="text-lg font-bold mb-4 text-gray-800">Reçete Yaz</h3>
 
-            <input v-model="prescription.medicineName" placeholder="İlaç Adı" class="border p-2 w-full mb-3"/>
-            <input v-model="prescription.diagnosis" placeholder="Teşhis" class="border p-2 w-full mb-3"/>
+            <input v-model="prescription.medicineName" placeholder="İlaç Adı" class="input-prescription mb-3"/>
+            <input v-model="prescription.diagnosis" placeholder="Teşhis" class="input-prescription mb-3"/>
 
             <div class="flex justify-end gap-2">
-              <button @click="showModal=false" class="px-4 py-2 bg-gray-400 text-white rounded">İptal</button>
-              <button @click="savePrescription" class="px-4 py-2 bg-blue-600 text-white rounded">Kaydet</button>
+              <button @click="showModal=false" class="btn-cancel">İptal</button>
+              <button @click="savePrescription" class="btn-save">Kaydet</button>
             </div>
           </div>
         </div>
@@ -57,7 +72,7 @@
             <td class="border p-2">{{ `${appt.doctorTitle || ""} ${appt.doctorName || ""}`.trim() || "-" }}</td>
             <td class="border p-2">
               <button
-                class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600"
+                class="btn-prescription"
                 @click="openPrescriptionModal(appt)">
                 Reçete Yaz
               </button>
@@ -89,8 +104,6 @@ export default {
         appointmentId: null,
       },
     };
-  },
-  mounted() {
   },
   methods: {
     async fetchAppointments() {
@@ -148,16 +161,20 @@ export default {
         minute: "2-digit"
       });
     },
+    goBackToWelcome() {
+      this.showWelcome = true;
+      this.appointments = [];
+    }
   },
 };
 </script>
 
 <style scoped>
-.appointment-list-page {
+.doctor-appointment-page {
   position: relative;
   min-height: 100vh;
   font-family: 'Arial', sans-serif;
-  background: linear-gradient(to bottom right, #cceeff, #74b9ff); /* Daha açık mavi tonları */
+  background: linear-gradient(to bottom right, #cceeff, #74b9ff);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -195,37 +212,108 @@ table tr:hover {
   transform: scale(1.02);
 }
 
-button {
-  transition: all 0.3s ease;
-}
-
-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-}
-
-.modal-enter-active, .modal-leave-active {
-  transition: opacity 0.3s ease;
-}
-.modal-enter-from, .modal-leave-to {
-  opacity: 0;
-}
-
 table {
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 8px 20px rgba(0,0,0,0.1);
 }
 
-input {
-  border-radius: 6px;
+.input-prescription {
+  border: 1px solid #cbd5e1;
+  padding: 10px 14px;
+  width: 100%;
+  border-radius: 8px;
+  font-size: 1rem;
   transition: all 0.2s ease;
 }
-
-input:focus {
+.input-prescription:focus {
   outline: none;
   border-color: #2563eb;
   box-shadow: 0 0 5px rgba(37, 99, 235, 0.3);
+}
+
+button {
+  transition: all 0.3s ease;
+}
+button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+}
+
+.back-button {
+  border: none;
+  transition: all 0.3s ease;
+}
+.back-button:hover {
+  box-shadow: 0 5px 12px rgba(59, 130, 246, 0.4);
+  transform: translateY(-1px) scale(1.03);
+}
+
+.btn-appointments {
+  background: linear-gradient(90deg, #74b9ff, #cceeff);
+  font-weight: bold;
+  padding: 10px 20px;
+  border-radius: 10px;
+  color: white;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+.btn-appointments:hover {
+  background: linear-gradient(90deg, #cceeff, #74b9ff);
+  transform: scale(1.03);
+}
+
+.btn-home {
+  background: linear-gradient(90deg, #ff7f50, #ffb347);
+  font-weight: bold;
+  padding: 8px 18px;
+  border-radius: 10px;
+  color: white;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+.btn-home:hover {
+  background: linear-gradient(90deg, #ffb347, #ff7f50);
+  transform: scale(1.03);
+}
+
+.btn-prescription {
+  background-color: #22c55e;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+.btn-prescription:hover {
+  background-color: #16a34a;
+  transform: scale(1.05);
+}
+
+.btn-cancel {
+  background-color: #9ca3af;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+.btn-cancel:hover {
+  background-color: #6b7280;
+  transform: scale(1.05);
+}
+
+.btn-save {
+  background-color: #3b82f6;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+.btn-save:hover {
+  background-color: #2563eb;
+  transform: scale(1.05);
 }
 
 @keyframes fadeIn {
@@ -233,22 +321,11 @@ input:focus {
   100% { opacity: 1; transform: translateY(0);}
 }
 
-/* Welcome ekranı stil eklemeleri */
 .welcome-screen h1 {
   text-shadow: 1px 1px 5px rgba(0,0,0,0.2);
 }
-
 .welcome-screen p {
   font-size: 1.2rem;
   margin-bottom: 2rem;
-}
-
-.welcome-screen button {
-  background: linear-gradient(90deg, #74b9ff, #cceeff);
-  font-weight: bold;
-}
-
-.welcome-screen button:hover {
-  background: linear-gradient(90deg, #cceeff, #74b9ff);
 }
 </style>

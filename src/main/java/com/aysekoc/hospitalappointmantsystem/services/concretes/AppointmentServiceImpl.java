@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -53,7 +54,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public List<Appointment> findByStartDate(LocalDateTime startDate) {
+    public List<Appointment> findByStartDate(LocalDate startDate) {
         return appointmentRepository.findByStartedDate(startDate);
     }
 
@@ -65,7 +66,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public List<Appointment> findByEndDate(LocalDateTime endDate) {
+    public List<Appointment> findByEndDate(LocalDate endDate) {
         return appointmentRepository.findByEndedDate(endDate);
     }
 

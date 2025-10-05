@@ -40,7 +40,7 @@ public class PrescriptionMapper {
         return String.valueOf((int)(Math.random() * 9000 + 1000));
     }
 
-    public static PrescriptionListDto toDto(Prescription prescription){
+    public PrescriptionListDto toDto(Prescription prescription){
         return  new PrescriptionListDto(
                 prescription.getId(),
                 prescription.getMedicineName(),

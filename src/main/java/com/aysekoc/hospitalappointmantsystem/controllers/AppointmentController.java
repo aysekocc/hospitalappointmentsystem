@@ -21,6 +21,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -72,13 +73,13 @@ public class AppointmentController {
 
     @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_DOCTOR')")
     @GetMapping("/list/startdate")
-    public ResponseEntity<List<Appointment>> findByStartDate(@Valid @RequestParam LocalDateTime startDate) {
+    public ResponseEntity<List<Appointment>> findByStartDate(@Valid @RequestParam LocalDate startDate) {
         return ResponseEntity.ok(appointmentService.findByStartDate(startDate));
     }
 
     @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_DOCTOR')")
     @GetMapping("/list/enddate")
-    public ResponseEntity<List<Appointment>> findByEndDate(@Valid @RequestParam LocalDateTime endDate) {
+    public ResponseEntity<List<Appointment>> findByEndDate(@Valid @RequestParam LocalDate endDate) {
         return ResponseEntity.ok(appointmentService.findByEndDate(endDate));
     }
 

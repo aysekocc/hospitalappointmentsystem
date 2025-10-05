@@ -1,6 +1,9 @@
 <template>
   <div class="register-page">
     <div class="overlay"></div>
+
+    <button class="back-btn" @click="$router.push('/')">← Geri Dön</button>
+
     <div class="register-container">
       <h2>Hasta Kaydı</h2>
       <form @submit.prevent="registerUser">
@@ -80,7 +83,8 @@ export default {
   justify-content: center;
   align-items: center;
   font-family: Arial, sans-serif;
-  background: url('https://images.unsplash.com/photo-1588776814546-df3f4b64f9e4?auto=format&fit=crop&w=1470&q=80') no-repeat center center/cover;
+  background: url('https://images.unsplash.com/photo-1588776814546-df3f4b64f9e4?auto=format&fit=crop&w=1470&q=80')
+  no-repeat center center/cover;
 }
 
 .overlay {
@@ -89,7 +93,26 @@ export default {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0,0,0,0.5);
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.back-btn {
+  position: absolute;
+  top: 25px;
+  left: 25px;
+  background-color: rgba(255, 255, 255, 0.85);
+  color: #333;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+  z-index: 2;
+}
+
+.back-btn:hover {
+  background-color: #e2e2e2;
 }
 
 .register-container {
@@ -98,7 +121,7 @@ export default {
   padding: 40px;
   border-radius: 12px;
   width: 350px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
   z-index: 1;
   text-align: center;
 }
@@ -123,7 +146,7 @@ export default {
 .register-container form select:focus {
   border-color: #007bff;
   outline: none;
-  box-shadow: 0 0 5px rgba(0,123,255,0.5);
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
 
 .register-container button {
