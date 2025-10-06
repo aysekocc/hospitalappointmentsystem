@@ -1,4 +1,4 @@
-package com.aysekoc.hospitalappointmentsystem.services;
+package com.aysekoc.hospitalappointmentsystemm.services;
 
 import com.aysekoc.hospitalappointmantsystem.config.JwtToken;
 import com.aysekoc.hospitalappointmantsystem.entities.*;
@@ -7,7 +7,7 @@ import com.aysekoc.hospitalappointmantsystem.repositories.DoctorRepository;
 import com.aysekoc.hospitalappointmantsystem.repositories.HospitalRepository;
 import com.aysekoc.hospitalappointmantsystem.repositories.UserRepository;
 import com.aysekoc.hospitalappointmantsystem.services.concretes.UserServiceImpl;
-import com.aysekoc.hospitalappointmantsystem.services.dtos.Doctor.CreateDoctorDto;
+import com.aysekoc.hospitalappointmantsystem.services.dtos.DoctorDto.CreateDoctorDto;
 import com.aysekoc.hospitalappointmantsystem.services.dtos.UserDto.CreateUserRequest;
 import com.aysekoc.hospitalappointmantsystem.services.dtos.UserDto.UserLoginRequest;
 import org.junit.jupiter.api.BeforeEach;

@@ -7,7 +7,7 @@ import com.aysekoc.hospitalappointmantsystem.services.abstracts.UserService;
 import com.aysekoc.hospitalappointmantsystem.services.dtos.UserDto.CreateUserRequest;
 import com.aysekoc.hospitalappointmantsystem.services.dtos.UserDto.UpdateUser;
 import com.aysekoc.hospitalappointmantsystem.services.dtos.UserDto.UserLoginRequest;
-import com.aysekoc.hospitalappointmantsystem.services.dtos.Doctor.CreateDoctorDto;
+import com.aysekoc.hospitalappointmantsystem.services.dtos.DoctorDto.CreateDoctorDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;

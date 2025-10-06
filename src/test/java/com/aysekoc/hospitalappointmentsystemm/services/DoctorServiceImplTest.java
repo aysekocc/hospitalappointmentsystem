@@ -1,12 +1,12 @@
-package com.aysekoc.hospitalappointmentsystem.services;
+package com.aysekoc.hospitalappointmentsystemm.services;
 
 import com.aysekoc.hospitalappointmantsystem.entities.Doctor;
 import com.aysekoc.hospitalappointmantsystem.entities.Specialty;
 import com.aysekoc.hospitalappointmantsystem.mapper.DoctorMapper;
 import com.aysekoc.hospitalappointmantsystem.repositories.DoctorRepository;
 import com.aysekoc.hospitalappointmantsystem.services.concretes.DoctorServiceImpl;
-import com.aysekoc.hospitalappointmantsystem.services.dtos.Doctor.CreateDoctorDto;
-import com.aysekoc.hospitalappointmantsystem.services.dtos.Doctor.DoctorListDto;
+import com.aysekoc.hospitalappointmantsystem.services.dtos.DoctorDto.CreateDoctorDto;
+import com.aysekoc.hospitalappointmantsystem.services.dtos.DoctorDto.DoctorListDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

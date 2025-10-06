@@ -17,6 +17,7 @@
           <th class="border p-2">Poliklinik</th>
           <th class="border p-2">Doktor Adı</th>
           <th class="border p-2">Reçete</th>
+          <th class="border p-2">İşlem</th>
         </tr>
         </thead>
         <tbody>
@@ -35,6 +36,13 @@
             <div v-else>
               Reçeteniz henüz yazılmadı
             </div>
+          </td>
+          <td class="border p-2">
+            <button
+              class="px-3 py-1 bg-red-500 hover:bg-red-600 text-white rounded"
+              @click="cancelAppointment(appt.id)">
+              İptal Et
+            </button>
           </td>
         </tr>
         </tbody>
@@ -77,7 +85,6 @@ export default {
           return;
         }
 
-        // Randevuları çek
         const res = await axios.get(`/api/v1/appointment/user/${userId}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
@@ -107,7 +114,7 @@ export default {
         this.prescriptions[appointmentId] = res.data || null;
       } catch (err) {
         console.error(err);
-        this.prescriptions[appointmentId] = null; // reçete yoksa null
+        this.prescriptions[appointmentId] = null;
       }
     },
 
@@ -122,6 +129,27 @@ export default {
         hour: "2-digit",
         minute: "2-digit"
       });
+    },
+
+    async cancelAppointment(appointmentId) {
+      const confirmed = confirm("Bu randevuyu iptal etmek istediğinize emin misiniz?");
+      if (!confirmed) return;
+
+      try {
+        const token = localStorage.getItem("token");
+        await axios.delete(`/api/v1/appointment/${appointmentId}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+
+        // Frontend'den kaldır
+        this.appointments = this.appointments.filter(a => a.id !== appointmentId);
+        delete this.prescriptions[appointmentId];
+
+        alert("Randevu başarıyla iptal edildi!");
+      } catch (err) {
+        console.error(err);
+        alert("Randevu iptal edilemedi. Lütfen tekrar deneyin.");
+      }
     }
   },
   mounted() {

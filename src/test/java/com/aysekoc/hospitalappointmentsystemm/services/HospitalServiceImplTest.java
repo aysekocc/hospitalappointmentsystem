@@ -1,4 +1,4 @@
-package com.aysekoc.hospitalappointmentsystem.services;
+package com.aysekoc.hospitalappointmentsystemm.services;
 
 
 import com.aysekoc.hospitalappointmantsystem.entities.Hospital;

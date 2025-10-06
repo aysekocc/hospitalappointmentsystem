@@ -30,7 +30,6 @@ public class PrescriptionMapper {
         prescription.setDiagnosis(createPrescription.getDiagnosis());
         prescription.setAppointment(appointment);
         prescription.setHashPrescription(generateHash());
-
         prescription.setUser(appointment.getUser());
 
         return prescription;

@@ -1,13 +1,10 @@
 spring:
   application:
-    name:
-      hospitalappointmantsystem
-
+    name: hospitalappointmantsystem
   datasource:
     url: jdbc:postgresql://localhost:5433/hospitalappointmentsystem
     username: admin
     password: secret
-
   jpa:
     hibernate:
       ddl-auto: update
@@ -22,12 +19,13 @@ spring:
     sql:
       init:
         platform: postgresql
-    profiles:
-      active: dev
+
+spring.profiles.active: dev
+
 server:
   port: 8082
 
-
-
-
-
+logging:
+  level:
+    org.springdoc: DEBUG
+    org.springframework.web: DEBUG

@@ -49,31 +49,27 @@ public class SecurityConfig {
                                            DaoAuthenticationProvider daoAuthenticationProvider) throws Exception {
 
         http
-                .cors(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
-
-                // Header ayarları
+                .cors(AbstractHttpConfigurer::disable)
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
-
-                // Form login kapalı
                 .formLogin(AbstractHttpConfigurer::disable)
-
-                // Stateles session
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-
-                // Endpoint yetkilendirme
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/auth/register/**", "/api/v1/auth/login", "/").permitAll()
+                        .requestMatchers(
+                                "/api/v1/auth/register/**",
+                                "/api/v1/auth/login",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/swagger-ui.html",
+                                "/swagger-resources/**",
+                                "/webjars/**"
+                        ).permitAll()
                         .requestMatchers("/api/v1/prescription/create").hasAuthority("ROLE_DOCTOR")
-                        .requestMatchers("/api/v1/appointment/**").hasAnyAuthority("ROLE_DOCTOR","ROLE_USER","ROLE_ADMIN")
-                        .requestMatchers("/api/v1/prescription/**").authenticated() // diğer reçete endpointleri login olmalı
+                        .requestMatchers("/api/v1/appointment/**").hasAnyAuthority("ROLE_DOCTOR","ROLE_USER")
+                        .requestMatchers("/api/v1/prescription/**").authenticated()
                         .anyRequest().authenticated()
                 )
-
-                // Authentication provider
                 .authenticationProvider(daoAuthenticationProvider)
-
-                // JWT filter
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

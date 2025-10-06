@@ -3,8 +3,8 @@ package com.aysekoc.hospitalappointmantsystem.mapper;
 import com.aysekoc.hospitalappointmantsystem.entities.Doctor;
 
 import com.aysekoc.hospitalappointmantsystem.services.concretes.HospitalServiceImpl;
-import com.aysekoc.hospitalappointmantsystem.services.dtos.Doctor.CreateDoctorDto;
-import com.aysekoc.hospitalappointmantsystem.services.dtos.Doctor.DoctorListDto;
+import com.aysekoc.hospitalappointmantsystem.services.dtos.DoctorDto.CreateDoctorDto;
+import com.aysekoc.hospitalappointmantsystem.services.dtos.DoctorDto.DoctorListDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
