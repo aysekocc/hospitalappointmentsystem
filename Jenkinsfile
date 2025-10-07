@@ -4,7 +4,6 @@ pipeline {
     tools {
         maven 'Maven3.9.9'
         jdk 'JDK17'
-        dockerTool 'Docker20'
         git 'Default'
     }
 
@@ -14,6 +13,7 @@ pipeline {
     }
 
     stages {
+
         stage('Checkout') {
             steps {
                 git branch: 'master', url: 'https://github.com/aysekocc/hospitalappointmentsystem.git'
