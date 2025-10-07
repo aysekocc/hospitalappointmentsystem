@@ -1,29 +1,24 @@
 pipeline {
     agent any
-
     tools {
         maven 'Maven3'
         jdk 'JDK21'
     }
-
     environment {
-        DOCKERHUB_USER = 'ayse33'
+        DOCKERHUB_USER = 'aysekoc'
         BACKEND_IMAGE = "hospitalappointmentsystem-backend"
     }
-
     stages {
         stage('Checkout') {
             steps {
                 git branch: 'master', url: 'https://github.com/aysekocc/hospitalappointmentsystem.git'
             }
         }
-
         stage('Build Backend') {
             steps {
                 bat 'mvn clean package -DskipTests'
             }
         }
-
         stage('Build Frontend') {
             steps {
                 dir('hospital-frontend') {
@@ -32,7 +27,6 @@ pipeline {
                 }
             }
         }
-
         stage('Docker Build & Push Backend') {
             steps {
                 withCredentials([string(credentialsId: 'dockerhub-credentials', variable: 'DOCKERHUB_PASS')]) {
@@ -44,7 +38,6 @@ pipeline {
                 }
             }
         }
-
         stage('Deploy') {
             steps {
                 bat 'docker-compose down || exit 0'
@@ -52,7 +45,6 @@ pipeline {
             }
         }
     }
-
     post {
         success {
             echo 'Pipeline başarıyla tamamlandı!'
