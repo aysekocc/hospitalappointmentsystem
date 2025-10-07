@@ -24,6 +24,19 @@
         <h2 class="text-2xl mb-4 font-bold text-gray-800 text-center">Randevu Oluştur</h2>
 
         <label class="block">
+          Tarih:
+          <input type="date" v-model="appointmentDate" required class="input-field w-full mt-1 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none" />
+        </label>
+
+        <label class="block">
+          Saat:
+          <select v-model="appointmentTime" required class="input-field w-full mt-1 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none">
+            <option disabled value="">Saat Seçin</option>
+            <option v-for="slot in timeSlots" :key="slot" :value="slot">{{ slot }}</option>
+          </select>
+        </label>
+
+        <label class="block">
           Hastane ID:
           <input type="number" v-model.number="appointment.hospitalId" placeholder="Hastane ID" required class="input-field w-full mt-1 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none" />
         </label>
@@ -46,16 +59,6 @@
               {{ doc.title }} {{ doc.name }} {{ doc.surname }}
             </option>
           </select>
-        </label>
-
-        <label class="block">
-          Başlangıç Tarihi:
-          <input type="date" v-model="appointment.startedDate" required class="input-field w-full mt-1 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none" />
-        </label>
-
-        <label class="block">
-          Bitiş Tarihi:
-          <input type="date" v-model="appointment.endedDate" required class="input-field w-full mt-1 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none" />
         </label>
 
         <div class="flex flex-col gap-2">
@@ -83,27 +86,20 @@ export default {
   data() {
     return {
       showForm: false,
+      appointmentDate: "",
+      appointmentTime: "",
       appointment: {
-        startedDate: "",
-        endedDate: "",
         doctor: null,
         hospitalId: null,
         specialty: "",
       },
       specialties: [
-        "KARDIYOLOJI",
-        "DAHILIYE",
-        "ORTOPEDI",
-        "GOZ_HASTALIKLARI",
-        "KBB",
-        "BEYIN_CERRAHISI",
-        "DERMATOLOJI",
-        "COCUK_SAGLIGI",
-        "PSIKIYATRI",
-        "NOROLOJI",
-        "UROLOJI",
+        "KARDIYOLOJI","DAHILIYE","ORTOPEDI","GOZ_HASTALIKLARI",
+        "KBB","BEYIN_CERRAHISI","DERMATOLOJI","COCUK_SAGLIGI",
+        "PSIKIYATRI","NOROLOJI","UROLOJI",
       ],
       doctors: [],
+      timeSlots: [],
       successMessage: "",
       errorMessage: "",
     };
@@ -115,16 +111,28 @@ export default {
     }
   },
   watch: {
-    'appointment.specialty'(newVal, oldVal) {
+    'appointment.specialty'(newVal) {
       this.appointment.doctor = null;
     }
   },
   mounted() {
     this.fetchDoctors();
+    this.timeSlots = this.generateTimeSlots(9, 17, 30); // 09:00 - 17:00
   },
   methods: {
     formatSpecialty(spec) {
       return spec.replace(/_/g, " ");
+    },
+    generateTimeSlots(startHour = 9, endHour = 17, intervalMinutes = 30) {
+      const slots = [];
+      for (let h = startHour; h < endHour; h++) {
+        for (let m = 0; m < 60; m += intervalMinutes) {
+          const hourStr = h.toString().padStart(2, "0");
+          const minStr = m.toString().padStart(2, "0");
+          slots.push(`${hourStr}:${minStr}`);
+        }
+      }
+      return slots;
     },
     async fetchDoctors() {
       try {
@@ -147,28 +155,58 @@ export default {
           return;
         }
 
-        await axios.post("/api/v1/appointment/create", this.appointment, {
+        if (!this.appointmentDate || !this.appointmentTime) {
+          this.errorMessage = "Lütfen tarih ve saat seçin.";
+          return;
+        }
+
+        // Tarih ve saat birleştirme
+        const [hours, minutes] = this.appointmentTime.split(":");
+        const startDate = new Date(this.appointmentDate);
+        startDate.setHours(parseInt(hours), parseInt(minutes), 0, 0);
+        const endDate = new Date(startDate.getTime() + 30 * 60000); // 30 dk ekle
+
+        // ISO yerine yerel tarih formatı (timezone kaybı olmadan)
+        const formatLocalDateTime = (date) => {
+          const year = date.getFullYear();
+          const month = String(date.getMonth() + 1).padStart(2, "0");
+          const day = String(date.getDate()).padStart(2, "0");
+          const hours = String(date.getHours()).padStart(2, "0");
+          const minutes = String(date.getMinutes()).padStart(2, "0");
+          const seconds = String(date.getSeconds()).padStart(2, "0");
+          return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+        };
+
+        const appointmentData = {
+          startedDate: formatLocalDateTime(startDate),
+          endedDate: formatLocalDateTime(endDate),
+          doctor: this.appointment.doctor,
+          hospitalId: this.appointment.hospitalId,
+          specialty: this.appointment.specialty,
+          userId: localStorage.getItem("userId") || null
+        };
+
+
+        await axios.post("/api/v1/appointment/create", appointmentData, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
         this.successMessage = "Randevu başarıyla oluşturuldu.";
         this.errorMessage = "";
-        this.appointment = {
-          startedDate: "",
-          endedDate: "",
-          doctor: null,
-          hospitalId: null,
-          specialty: "",
-        };
+        this.appointmentDate = "";
+        this.appointmentTime = "";
+        this.appointment = { doctor: null, hospitalId: null, specialty: "" };
+
       } catch (err) {
-        console.error(err);
-        this.errorMessage = "Randevu oluşturulamadı.";
+        console.error("Randevu hatası:", err.response?.data || err.message);
+        this.errorMessage = err.response?.data?.message || "Randevu oluşturulamadı. Lütfen bilgileri kontrol edin.";
         this.successMessage = "";
       }
     },
   },
 };
 </script>
+
 
 <style scoped>
 .appointment-page {

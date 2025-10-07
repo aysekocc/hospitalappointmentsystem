@@ -1,7 +1,6 @@
 package com.aysekoc.hospitalappointmantsystem.controllers;
 import com.aysekoc.hospitalappointmantsystem.entities.Appointment;
 import com.aysekoc.hospitalappointmantsystem.entities.Doctor;
-import com.aysekoc.hospitalappointmantsystem.entities.User;
 import com.aysekoc.hospitalappointmantsystem.mapper.AppointmentMapper;
 import com.aysekoc.hospitalappointmantsystem.repositories.UserRepository;
 import com.aysekoc.hospitalappointmantsystem.services.abstracts.AppointmentService;
@@ -13,6 +12,7 @@ import com.aysekoc.hospitalappointmantsystem.services.dtos.AppointmentDto.Create
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -40,19 +41,37 @@ public class AppointmentController {
     private final AppointmentMapper appointmentMapper;
     private final UserServiceImpl userServiceImpl;
 
-    @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_DOCTOR')")
     @PostMapping("/create")
-    public ResponseEntity<Void> createAppointment(
+    @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_DOCTOR')")
+    public ResponseEntity<?> createAppointment(
             @Valid @RequestBody CreateAppointment createAppointment,
             @AuthenticationPrincipal UserDetails userDetails) {
 
-        User user = userServiceImpl.findByUsername(userDetails.getUsername())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        try {
+            var user = userServiceImpl.findByUsername(userDetails.getUsername())
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+            createAppointment.setUserId(user.getId());
 
-        createAppointment.setUserId(user.getId());
-        appointmentService.createAppointment(createAppointment);
+            appointmentService.createAppointment(createAppointment);
 
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body("Randevu başarıyla oluşturuldu.");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Collections.singletonMap("message", e.getMessage()));
+        }
+    }
+
+    @GetMapping("/bookedSlots")
+    public ResponseEntity<List<String>> getBookedSlots(
+            @RequestParam Long doctorId,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+
+        List<LocalDateTime> slots = appointmentService.findBookedSlots(doctorId, date);
+        List<String> slotStrings = slots.stream()
+                .map(dt -> dt.toLocalTime().truncatedTo(ChronoUnit.MINUTES).toString()) // "09:00" format
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(slotStrings);
     }
 
     @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_DOCTOR')")
@@ -71,17 +90,6 @@ public class AppointmentController {
     }
 
 
-    @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_DOCTOR')")
-    @GetMapping("/list/startdate")
-    public ResponseEntity<List<Appointment>> findByStartDate(@Valid @RequestParam LocalDate startDate) {
-        return ResponseEntity.ok(appointmentService.findByStartDate(startDate));
-    }
-
-    @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_DOCTOR')")
-    @GetMapping("/list/enddate")
-    public ResponseEntity<List<Appointment>> findByEndDate(@Valid @RequestParam LocalDate endDate) {
-        return ResponseEntity.ok(appointmentService.findByEndDate(endDate));
-    }
 
     @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_DOCTOR')")
     @GetMapping("/my-appointments")

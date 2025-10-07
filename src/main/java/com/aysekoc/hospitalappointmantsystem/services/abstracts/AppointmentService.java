@@ -1,12 +1,10 @@
 package com.aysekoc.hospitalappointmantsystem.services.abstracts;
 
 import com.aysekoc.hospitalappointmantsystem.entities.Appointment;
-import com.aysekoc.hospitalappointmantsystem.services.dtos.AppointmentDto.AppointmentDto;
 import com.aysekoc.hospitalappointmantsystem.services.dtos.AppointmentDto.AppointmentListDoctorDto;
 import com.aysekoc.hospitalappointmantsystem.services.dtos.AppointmentDto.AppointmentListUserDto;
 import com.aysekoc.hospitalappointmantsystem.services.dtos.AppointmentDto.CreateAppointment;
 import org.springframework.data.domain.Page;
-import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -17,13 +15,12 @@ public interface AppointmentService {
     Page<Appointment> getAppointments(int pageNumber, int pageSize);
     String createAppointment(CreateAppointment createAppointment);
     Optional<Appointment> findById(Long id);
-    List<Appointment> findByStartDate(LocalDate startDate);
     List<Appointment> findByUsername(String username);
-    List<Appointment> findByEndDate(LocalDate endDate);
     List<Appointment> findAll();
     void deleteAppointment(Long appointmentId);
     List<AppointmentListUserDto> userList(Long userId);
     List<AppointmentListDoctorDto> getAppointmentsByDoctorId(Long doctorId);
     List<Appointment> findByDoctorId(Long doctorId);
+    List<LocalDateTime> findBookedSlots(Long doctorId, LocalDate date);
 }
 

@@ -57,7 +57,7 @@
             <th class="border p-2">Başlangıç</th>
             <th class="border p-2">Bitiş</th>
             <th class="border p-2">Hasta Adı</th>
-            <th class="border p-2">Hastane Adı</th>
+            <th class="border p-2">Hastane Adı</th>z
             <th class="border p-2">Doktor Adı</th>
           </tr>
           </thead>

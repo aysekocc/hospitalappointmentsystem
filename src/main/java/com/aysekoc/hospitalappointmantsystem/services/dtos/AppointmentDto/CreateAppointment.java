@@ -1,9 +1,10 @@
 package com.aysekoc.hospitalappointmantsystem.services.dtos.AppointmentDto;
 
 import com.aysekoc.hospitalappointmantsystem.entities.Specialty;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -11,8 +12,9 @@ import java.time.LocalDate;
 @Getter
 @Setter
 public class CreateAppointment {
-    private LocalDate startedDate;
-    private LocalDate endedDate;
+
+    private LocalDateTime startedDate;
+    private LocalDateTime endedDate;
     private Long doctor;
     private Long userId;
     private Long hospitalId;

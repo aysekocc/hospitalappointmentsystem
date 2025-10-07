@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name="appointments")
@@ -21,11 +21,11 @@ public class Appointment {
     @Column(name="appointment_id")
     private Long id;
 
-    @Column(name="started_date")
-    private LocalDate startedDate;
+    @Column(name="started_date", nullable = false)
+    private LocalDateTime startedDate;
 
-    @Column(name="ended_date")
-    private LocalDate endedDate;
+    @Column(name="ended_date", nullable = false)
+    private LocalDateTime endedDate;
 
     @ManyToOne
     @JoinColumn(name="user_id")
@@ -37,10 +37,13 @@ public class Appointment {
 
     @ManyToOne
     @JoinColumn(name="hospital_id")
-    private Hospital hospitalId;
+    private Hospital hospital;
 
     @OneToOne(mappedBy = "appointment", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Prescription prescription;
+
+    @Column(name="specialty")
+    private Specialty specialty;
 
 
 

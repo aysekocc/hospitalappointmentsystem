@@ -2,6 +2,7 @@ package com.aysekoc.hospitalappointmantsystem.services.concretes;
 
 import com.aysekoc.hospitalappointmantsystem.entities.Appointment;
 import com.aysekoc.hospitalappointmantsystem.entities.User;
+import com.aysekoc.hospitalappointmantsystem.exception.AppointmentConflictException;
 import com.aysekoc.hospitalappointmantsystem.mapper.AppointmentMapper;
 import com.aysekoc.hospitalappointmantsystem.repositories.AppointmentRepository;
 import com.aysekoc.hospitalappointmantsystem.services.abstracts.AppointmentService;
@@ -44,6 +45,17 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public String createAppointment(CreateAppointment createAppointment) {
+        LocalDateTime start = createAppointment.getStartedDate();
+        LocalDateTime end = createAppointment.getEndedDate();
+        boolean conflict = appointmentRepository.existsConflict(
+                createAppointment.getDoctor(),
+                start,
+                end
+        );
+
+        if (conflict) {
+            throw new AppointmentConflictException("Seçilen saat dolu. Lütfen başka bir saat seçin.");
+        }
         appointmentRepository.save(appointmentMapper.createAppointment(createAppointment));
         return "Created";
     }
@@ -53,10 +65,6 @@ public class AppointmentServiceImpl implements AppointmentService {
         return appointmentRepository.findById(appointmentId);
     }
 
-    @Override
-    public List<Appointment> findByStartDate(LocalDate startDate) {
-        return appointmentRepository.findByStartedDate(startDate);
-    }
 
     @Override
     public List<Appointment> findByUsername(String username) {
@@ -65,10 +73,6 @@ public class AppointmentServiceImpl implements AppointmentService {
         return appointmentRepository.findByUser(user);
     }
 
-    @Override
-    public List<Appointment> findByEndDate(LocalDate endDate) {
-        return appointmentRepository.findByEndedDate(endDate);
-    }
 
     @Override
     public List<Appointment> findAll() {
@@ -106,5 +110,12 @@ public class AppointmentServiceImpl implements AppointmentService {
             throw new RuntimeException("Appointment not found with id: " + appointmentId);
         }
         appointmentRepository.deleteById(appointmentId);
+    }
+
+    public List<LocalDateTime> findBookedSlots(Long doctorId, LocalDate date) {
+        LocalDateTime startOfDay = date.atTime(0, 0);
+        LocalDateTime endOfDay = date.atTime(23, 59);
+
+        return appointmentRepository.findByDoctorAndDateRange(doctorId, startOfDay, endOfDay);
     }
 }

@@ -23,49 +23,37 @@ public class AppointmentMapper {
 
     public Appointment createAppointment(CreateAppointment createAppointment) {
         Appointment appointment = new Appointment();
-
         Doctor doctor = null;
         if (createAppointment.getDoctor() != null) {
             doctor = doctorService.findById(createAppointment.getDoctor())
                     .orElseThrow(() -> new RuntimeException("Doctor not found with id: " + createAppointment.getDoctor()));
         }
-
         else if (createAppointment.getSpecialty() != null) {
             doctor = doctorService.findFirstBySpecialty(createAppointment.getSpecialty())
                     .orElseThrow(() -> new RuntimeException("Doctor not found for specialty: " + createAppointment.getSpecialty()));
         } else {
             throw new RuntimeException("Either doctorId or specialty must be provided.");
         }
-
         appointment.setDoctor(doctor);
-
-
         Hospital hospital = hospitalService.findByIdMap(createAppointment.getHospitalId());
-        appointment.setHospitalId(hospital);
-
+        appointment.setHospital(hospital);
         appointment.setStartedDate(createAppointment.getStartedDate());
         appointment.setEndedDate(createAppointment.getEndedDate());
-
         User user = userService.findById(createAppointment.getUserId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
         appointment.setUser(user);
-
-
         return appointment;
     }
-
     public AppointmentListUserDto mapToUserDto(Appointment appt) {
         AppointmentListUserDto dto = new AppointmentListUserDto();
         dto.setId(appt.getId());
         dto.setStartedDate(appt.getStartedDate());
         dto.setEndedDate(appt.getEndedDate());
-
         if (appt.getUser() != null) {
             dto.setUserName(appt.getUser().getUsername());
         } else {
             dto.setUserName("bu");
         }
-
         if (appt.getDoctor() != null) {
             dto.setDoctorName(appt.getDoctor().getUsername());
             dto.setTitle(appt.getDoctor().getTitle());
@@ -75,9 +63,8 @@ public class AppointmentMapper {
             dto.setTitle("-");
             dto.setSpecialty(null);
         }
-
-        if (appt.getHospitalId() != null) {
-            dto.setHospitalName(appt.getHospitalId().getName());
+        if (appt.getHospital() != null) {
+            dto.setHospitalName(appt.getHospital().getName());
         } else {
             dto.setHospitalName("-");
         }
@@ -90,17 +77,13 @@ public class AppointmentMapper {
         dto.setPrescriptionHash(
                 appt.getPrescription() != null ? appt.getPrescription().getHashPrescription() : null
         );
-
         return dto;
     }
-
-
     public AppointmentListDoctorDto mapToDoctorDto(Appointment appt) {
         AppointmentListDoctorDto dto = new AppointmentListDoctorDto();
-        dto.setId(appt.getId());
         dto.setStartedDate(appt.getStartedDate());
         dto.setEndedDate(appt.getEndedDate());
-
+        dto.setId(appt.getId());
         if (appt.getDoctor() != null) {
             dto.setDoctorId(appt.getDoctor().getId());
             dto.setDoctorName(appt.getDoctor().getUsername());
@@ -109,20 +92,17 @@ public class AppointmentMapper {
             dto.setDoctorName("-");
             dto.setDoctorTitle("-");
         }
-
-        if (appt.getHospitalId() != null) {
-            dto.setHospitalId(appt.getHospitalId().getId());
-            dto.setHospitalName(appt.getHospitalId().getName());
+        if (appt.getHospital() != null) {
+            dto.setHospitalId(appt.getHospital().getId());
+            dto.setHospitalName(appt.getHospital().getName());
         } else {
             dto.setHospitalName("-");
         }
-
         if (appt.getUser() != null) {
             dto.setUsername(appt.getUser().getUsername());
         } else {
             dto.setUsername("bulunamadı");
         }
-
         return dto;
     }
 
