@@ -66,7 +66,6 @@ export default {
   },
 
   methods: {
-
     formatSpecialty(spec) {
       if (!spec) return "-";
       return spec.replace(/_/g, " ");
@@ -90,7 +89,6 @@ export default {
         });
         this.appointments = res.data;
 
-        // Her randevu için reçeteyi çek
         for (const appt of this.appointments) {
           await this.fetchPrescription(appt.id);
         }
@@ -107,13 +105,9 @@ export default {
 
     async fetchPrescription(appointmentId) {
       try {
-        const token = localStorage.getItem("token");
-        const res = await axios.get(`/api/v1/prescription/list/by-appointment/${appointmentId}`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+        const res = await axios.get(`/api/v1/prescription/${appointmentId}`);
         this.prescriptions[appointmentId] = res.data || null;
       } catch (err) {
-        console.error(err);
         this.prescriptions[appointmentId] = null;
       }
     },
@@ -141,7 +135,6 @@ export default {
           headers: { Authorization: `Bearer ${token}` }
         });
 
-        // Frontend'den kaldır
         this.appointments = this.appointments.filter(a => a.id !== appointmentId);
         delete this.prescriptions[appointmentId];
 
@@ -157,6 +150,7 @@ export default {
   }
 };
 </script>
+
 
 <style scoped>
 .appointment-list-page {

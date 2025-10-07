@@ -1,121 +1,112 @@
 import { mount, flushPromises } from "@vue/test-utils";
-import AppointmentPage from "@/views/AppointmentPage.vue";
+import AppointmentList from "@/views/AppointmentList.vue";
 import axios from "axios";
 
 jest.mock("axios");
+window.confirm = jest.fn(() => true);
+window.alert = jest.fn();
 
-describe("AppointmentPage.vue", () => {
+describe("AppointmentList.vue", () => {
   let wrapper;
   const mockRouterPush = jest.fn();
+
+  async function createWrapper() {
+    localStorage.setItem("token", "mocked-token");
+    localStorage.setItem("userId", "1");
+
+    axios.get
+      .mockResolvedValueOnce({
+        data: [
+          {
+            id: 1,
+            startedDate: "2025-10-10T09:00:00",
+            endedDate: "2025-10-10T09:30:00",
+            userName: "Ali Yılmaz",
+            hospitalName: "Erdemli Devlet H.",
+            specialty: "KARDIYOLOJI",
+            doctorName: "Ahmet Demir",
+            title: "Dr.",
+          },
+        ],
+      })
+      .mockResolvedValueOnce({
+        data: {
+          medicineName: "Parol",
+          diagnosis: "Grip",
+        },
+      });
+
+    wrapper = mount(AppointmentList, {
+      global: {
+        mocks: {
+          $router: { push: mockRouterPush },
+        },
+      },
+    });
+
+    await flushPromises();
+    return wrapper;
+  }
 
   beforeEach(async () => {
     jest.clearAllMocks();
     localStorage.clear();
+    await createWrapper();
+  });
 
-    axios.get.mockResolvedValue({ data: [
-        { id: 1, name: "Ali", surname: "Yılmaz", title: "Dr.", specialty: "KARDIYOLOJI" },
-        { id: 2, name: "Ayşe", surname: "Koç", title: "Dr.", specialty: "DAHILIYE" }
-      ]});
+  it("randevuları ve reçeteleri başarıyla yükler", () => {
+    expect(wrapper.vm.appointments).toHaveLength(1);
+    expect(wrapper.text()).toContain("Ali Yılmaz");
+    expect(wrapper.text()).toContain("Parol");
+    expect(wrapper.text()).toContain("Grip");
+  });
 
-    wrapper = mount(AppointmentPage, {
-      global: {
-        mocks: {
-          $router: { push: mockRouterPush }
-        }
-      }
+  it("token veya userId yoksa login sayfasına yönlendirir", async () => {
+    localStorage.clear();
+    wrapper = mount(AppointmentList, {
+      global: { mocks: { $router: { push: mockRouterPush } } },
     });
-
     await flushPromises();
-  });
-
-  // === 1. Başlangıç ekranı testi ===
-  it("ilk olarak karşılama ekranını gösterir", () => {
-    expect(wrapper.find(".welcome-screen").exists()).toBe(true);
-    expect(wrapper.find("form").exists()).toBe(false);
-  });
-
-  // === 2. Randevu oluştur butonuna basıldığında formun görünmesi ===
-  it("Randevu oluştur butonuna basıldığında form görünür", async () => {
-    await wrapper.find("button.btn-submit").trigger("click");
-    expect(wrapper.find("form").exists()).toBe(true);
-  });
-
-  // === 3. Doktorların fetch edilmesi ===
-  it("fetchDoctors çağrıldığında doktor listesini yükler", async () => {
-    expect(axios.get).toHaveBeenCalledWith("/api/v1/doctor/all", expect.any(Object));
-    expect(wrapper.vm.doctors.length).toBe(2);
-  });
-
-  // === 4. Branşa göre doktor filtreleme ===
-  it("branş seçildiğinde sadece o branştaki doktorları gösterir", async () => {
-    await wrapper.setData({
-      appointment: { specialty: "KARDIYOLOJI", doctor: null }
-    });
-    const filtered = wrapper.vm.filteredDoctors;
-    expect(filtered.length).toBe(1);
-    expect(filtered[0].name).toBe("Ali");
-  });
-
-  // === 5. Token yoksa login sayfasına yönlendirir ===
-  it("token yoksa createAppointment login sayfasına yönlendirir", async () => {
-    await wrapper.setData({
-      showForm: true,
-      appointment: {
-        startedDate: "2025-10-10",
-        endedDate: "2025-10-11",
-        doctor: 1,
-        hospitalId: 123,
-        specialty: "KARDIYOLOJI"
-      }
-    });
-    await wrapper.vm.createAppointment();
     expect(mockRouterPush).toHaveBeenCalledWith("/login");
   });
 
-  // === 6. Token varsa randevu oluşturma isteği ===
-  it("token varsa randevu başarıyla oluşturur", async () => {
-    localStorage.setItem("token", "mocked-token");
-    axios.post.mockResolvedValueOnce({});
-
-    await wrapper.setData({
-      showForm: true,
-      appointment: {
-        startedDate: "2025-10-10",
-        endedDate: "2025-10-11",
-        doctor: 1,
-        hospitalId: 123,
-        specialty: "KARDIYOLOJI"
-      }
-    });
-
-    await wrapper.vm.createAppointment();
-    expect(axios.post).toHaveBeenCalledWith(
-      "/api/v1/appointment/create",
-      expect.any(Object),
-      expect.objectContaining({
-        headers: { Authorization: "Bearer mocked-token" }
-      })
-    );
-    expect(wrapper.vm.successMessage).toBe("Randevu başarıyla oluşturuldu.");
+  it("reçete alınamadığında prescriptions[appointmentId] null olur", async () => {
+    axios.get.mockRejectedValueOnce(new Error("Network Error"));
+    await wrapper.vm.fetchPrescription(99);
+    expect(wrapper.vm.prescriptions[99]).toBeNull();
   });
 
-  // === 7. API hatasında hata mesajı gösterir ===
-  it("randevu oluşturulamadığında hata mesajı gösterir", async () => {
-    localStorage.setItem("token", "mocked-token");
-    axios.post.mockRejectedValueOnce(new Error("Network Error"));
+  it("randevuyu başarıyla iptal eder", async () => {
+    axios.delete.mockResolvedValueOnce({});
+    await wrapper.vm.cancelAppointment(1);
+    expect(wrapper.vm.appointments.length).toBe(0);
+    expect(window.alert).toHaveBeenCalledWith("Randevu başarıyla iptal edildi!");
+  });
 
-    await wrapper.setData({
-      showForm: true,
-      appointment: {
-        startedDate: "2025-10-10",
-        endedDate: "2025-10-11",
-        doctor: 1,
-        hospitalId: 123,
-        specialty: "KARDIYOLOJI"
-      }
+  it("randevu iptali başarısız olursa hata alert gösterir", async () => {
+    axios.delete.mockRejectedValueOnce(new Error("Sunucu hatası"));
+    await wrapper.vm.cancelAppointment(1);
+    expect(window.alert).toHaveBeenCalledWith("Randevu iptal edilemedi. Lütfen tekrar deneyin.");
+  });
+
+  it("403 hatasında yetkisiz erişim mesajı gösterir", async () => {
+    axios.get.mockRejectedValueOnce({ response: { status: 403 } });
+    wrapper = mount(AppointmentList, {
+      global: { mocks: { $router: { push: mockRouterPush } } },
     });
+    await flushPromises();
+    expect(wrapper.vm.errorMessage).toBe(
+      "Yetkisiz erişim! Lütfen giriş yapın veya farklı bir kullanıcı deneyin."
+    );
+  });
 
-    await wrapper.vm.createAppointment();
-    expect(wrapper.vm.errorMessage).toBe("Randevu oluşturulamadı.");
+  it("formatDate geçerli tarih formatı döndürür", () => {
+    const formatted = wrapper.vm.formatDate("2025-10-10T09:00:00");
+    expect(formatted).toMatch(/10\.10\.2025/);
+  });
+
+  it("formatSpecialty alt çizgileri boşlukla değiştirir", () => {
+    const result = wrapper.vm.formatSpecialty("BEYIN_CERRAHISI");
+    expect(result).toBe("BEYIN CERRAHISI");
   });
 });

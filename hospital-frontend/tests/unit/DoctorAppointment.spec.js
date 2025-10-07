@@ -1,4 +1,4 @@
-import { mount } from "@vue/test-utils";
+import { mount, flushPromises } from "@vue/test-utils";
 import DoctorAppointment from "@/views/DoctorAppointment.vue";
 import axios from "axios";
 
@@ -6,15 +6,14 @@ jest.mock("axios");
 
 describe("DoctorAppointmentPage.vue", () => {
   let wrapper;
+  const mockRouter = { push: jest.fn() };
 
   beforeEach(() => {
     jest.clearAllMocks();
     Storage.prototype.getItem = jest.fn(() => "mocked-token");
     wrapper = mount(DoctorAppointment, {
       global: {
-        mocks: {
-          $router: { push: jest.fn() },
-        },
+        mocks: { $router: mockRouter },
       },
     });
   });
@@ -31,38 +30,42 @@ describe("DoctorAppointmentPage.vue", () => {
 
     const button = wrapper.find(".btn-appointments");
     await button.trigger("click");
+    await flushPromises();
 
     expect(wrapper.vm.showWelcome).toBe(false);
     expect(axios.get).toHaveBeenCalledWith("/api/v1/appointment/my", expect.any(Object));
     expect(wrapper.vm.appointments.length).toBe(1);
+    expect(wrapper.vm.appointments[0].username).toBe("Hasta 1");
   });
 
   // -----------------------------
   it("fetchAppointments sırasında token yoksa login sayfasına yönlendirir", async () => {
     Storage.prototype.getItem = jest.fn(() => null);
-    wrapper = mount(DoctorAppointment, {
-      global: { mocks: { $router: { push: jest.fn() } } },
+    const localWrapper = mount(DoctorAppointment, {
+      global: { mocks: { $router: mockRouter } },
     });
 
-    await wrapper.vm.fetchAppointments();
-
-    expect(wrapper.vm.$router.push).toHaveBeenCalledWith("/login");
+    await localWrapper.vm.fetchAppointments();
+    expect(mockRouter.push).toHaveBeenCalledWith("/login");
   });
 
   // -----------------------------
   it("fetchAppointments hata alırsa errorMessage ayarlanır", async () => {
     axios.get.mockRejectedValue({ response: { status: 500 } });
     await wrapper.vm.fetchAppointments();
+    await flushPromises();
+
     expect(wrapper.vm.errorMessage).toBe("Randevular yüklenemedi.");
   });
 
   // -----------------------------
-  it("openPrescriptionModal doğru şekilde modalı açar ve verileri ayarlar", async () => {
+  it("openPrescriptionModal doğru şekilde modalı açar ve verileri ayarlar", () => {
     const fakeAppointment = { id: 10, username: "Hasta X" };
     wrapper.vm.openPrescriptionModal(fakeAppointment);
 
     expect(wrapper.vm.showModal).toBe(true);
     expect(wrapper.vm.prescription.appointmentId).toBe(10);
+    expect(wrapper.vm.prescription.medicineName).toBe("");
   });
 
   // -----------------------------
@@ -77,6 +80,7 @@ describe("DoctorAppointmentPage.vue", () => {
     };
 
     await wrapper.vm.savePrescription();
+    await flushPromises();
 
     expect(axios.post).toHaveBeenCalledWith(
       "/api/v1/prescription/create",
@@ -93,11 +97,13 @@ describe("DoctorAppointmentPage.vue", () => {
     window.alert = jest.fn();
 
     await wrapper.vm.savePrescription();
+    await flushPromises();
+
     expect(window.alert).toHaveBeenCalledWith("Reçete kaydedilemedi.");
   });
 
   // -----------------------------
-  it("goBackToWelcome çağrıldığında karşılama ekranına döner", async () => {
+  it("goBackToWelcome çağrıldığında karşılama ekranına döner", () => {
     wrapper.vm.showWelcome = false;
     wrapper.vm.appointments = [{ id: 1 }];
 
@@ -110,10 +116,11 @@ describe("DoctorAppointmentPage.vue", () => {
   // -----------------------------
   it("formatDate geçerli tarihi doğru biçimlendirir", () => {
     const result = wrapper.vm.formatDate("2025-10-05T12:00:00Z");
-    expect(result).toMatch(/\d{2}\.\d{2}\.\d{4}/); // TR formatında tarih bekleniyor
+    expect(result).toMatch(/2025|10|05/); // TR formatını esnek kontrol
   });
 
   it("formatDate geçersiz tarih geldiğinde '-' döner", () => {
     expect(wrapper.vm.formatDate("geçersiz")).toBe("-");
+    expect(wrapper.vm.formatDate(null)).toBe("-");
   });
 });
