@@ -5,6 +5,7 @@ pipeline {
         maven 'Maven3.9.9'
         jdk 'JDK17'
         dockerTool 'Docker20'
+        git 'Default'
     }
 
     environment {
