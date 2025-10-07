@@ -45,8 +45,8 @@ docker-compose up --build
 <img width="1818" height="807" alt="Ekran görüntüsü 2025-10-07 163046" src="https://github.com/user-attachments/assets/b51a4de1-8b67-4041-ad50-bbf034be8c36" />
 <img width="1845" height="854" alt="Ekran görüntüsü 2025-10-07 163117" src="https://github.com/user-attachments/assets/09f87c5d-b928-4250-bac3-afeb97257a94" />
 <img width="1855" height="865" alt="Ekran görüntüsü 2025-10-07 163132" src="https://github.com/user-attachments/assets/006f0723-f3d7-452f-a3cd-630ef3aae769" />
-
-
-
+<img width="1864" height="889" alt="Ekran görüntüsü 2025-10-07 163636" src="https://github.com/user-attachments/assets/af193662-fd04-4a6e-be47-0b84c1b9bb20" />
+<img width="1852" height="868" alt="Ekran görüntüsü 2025-10-07 163439" src="https://github.com/user-attachments/assets/0476f930-3e66-45ab-8862-45857ae025c6" />
+<img width="1885" height="554" alt="Ekran görüntüsü 2025-10-07 163821" src="https://github.com/user-attachments/assets/0abfd480-6311-45e7-810e-9f43e07dd237" />
 
 
