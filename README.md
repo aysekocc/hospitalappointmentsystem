@@ -37,9 +37,16 @@ Tüm sistemi container’lar içinde ayağa kaldırmak için:
 docker-compose up --build
 
 
+<img width="1884" height="894" alt="Ekran görüntüsü 2025-10-07 162913" src="https://github.com/user-attachments/assets/fae4d8a0-36c4-41d7-a79e-a8aae731e4bf" />
+<img width="1875" height="885" alt="Ekran görüntüsü 2025-10-07 162932" src="https://github.com/user-attachments/assets/ca23a1a6-e038-462b-bf2a-10f28ec00f48" />
+<img width="1878" height="889" alt="Ekran görüntüsü 2025-10-07 162948" src="https://github.com/user-attachments/assets/ee5f9587-c338-4b92-ad1c-18aa26d546b7" />
+<img width="1866" height="869" alt="Ekran görüntüsü 2025-10-07 163006" src="https://github.com/user-attachments/assets/779f8619-5060-47b5-aa42-5d2764fb37ce" />
+<img width="1874" height="871" alt="Ekran görüntüsü 2025-10-07 163027" src="https://github.com/user-attachments/assets/6b10d2b0-e7e2-4e5f-8235-179e7e82fa23" />
+<img width="1818" height="807" alt="Ekran görüntüsü 2025-10-07 163046" src="https://github.com/user-attachments/assets/b51a4de1-8b67-4041-ad50-bbf034be8c36" />
+<img width="1845" height="854" alt="Ekran görüntüsü 2025-10-07 163117" src="https://github.com/user-attachments/assets/09f87c5d-b928-4250-bac3-afeb97257a94" />
+<img width="1855" height="865" alt="Ekran görüntüsü 2025-10-07 163132" src="https://github.com/user-attachments/assets/006f0723-f3d7-452f-a3cd-630ef3aae769" />
+<img width="1864" height="889" alt="Ekran görüntüsü 2025-10-07 163636" src="https://github.com/user-attachments/assets/af193662-fd04-4a6e-be47-0b84c1b9bb20" />
+<img width="1852" height="868" alt="Ekran görüntüsü 2025-10-07 163439" src="https://github.com/user-attachments/assets/0476f930-3e66-45ab-8862-45857ae025c6" />
+<img width="1885" height="554" alt="Ekran görüntüsü 2025-10-07 163821" src="https://github.com/user-attachments/assets/0abfd480-6311-45e7-810e-9f43e07dd237" />
 
 
-![WhatsApp Görsel 2025-09-18 saat 13 46 37_51c70ba7](https://github.com/user-attachments/assets/ec4f0400-e521-4099-a5ec-a93d3c614146)
-![WhatsApp Görsel 2025-09-18 saat 13 47 07_5ec8371d](https://github.com/user-attachments/assets/3874948c-5090-4e96-aa86-f3cc43897227)
-![WhatsApp Görsel 2025-09-18 saat 13 47 33_2e73b18c](https://github.com/user-attachments/assets/90a18a01-a542-4d4a-b5de-739b4ab61071)
-![WhatsApp Görsel 2025-09-18 saat 13 48 10_b4c4af06](https://github.com/user-attachments/assets/dd876855-2431-4bcc-8172-5d97f2513a79)
