@@ -14,36 +14,40 @@ pipeline {
                 git branch: 'master', url: 'https://github.com/aysekocc/hospitalappointmentsystem.git'
             }
         }
-        stage('Build Backend') {
-            steps {
-                bat 'mvn clean package -DskipTests'
-            }
+stage('Build Backend') {
+    steps {
+        sh 'mvn clean package -DskipTests'
+    }
+}
+
+stage('Build Frontend') {
+    steps {
+        dir('hospital-frontend') {
+            sh 'npm install'
+            sh 'npm run build'
         }
-        stage('Build Frontend') {
-            steps {
-                dir('hospital-frontend') {
-                    bat 'npm install'
-                    bat 'npm run build'
-                }
-            }
+    }
+}
+
+stage('Docker Build & Push Backend') {
+    steps {
+        withCredentials([string(credentialsId: 'dockerhub-credentials', variable: 'DOCKERHUB_PASS')]) {
+            sh """
+            echo $DOCKERHUB_PASS | docker login -u $DOCKERHUB_USER --password-stdin
+            docker build -t $DOCKERHUB_USER/$BACKEND_IMAGE:latest -f Dockerfile .
+            docker push $DOCKERHUB_USER/$BACKEND_IMAGE:latest
+            """
         }
-        stage('Docker Build & Push Backend') {
-            steps {
-                withCredentials([string(credentialsId: 'dockerhub-credentials', variable: 'DOCKERHUB_PASS')]) {
-                    bat """
-                    echo %DOCKERHUB_PASS% | docker login -u %DOCKERHUB_USER% --password-stdin
-                    docker build -t %DOCKERHUB_USER%/%BACKEND_IMAGE%:latest -f Dockerfile .
-                    docker push %DOCKERHUB_USER%/%BACKEND_IMAGE%:latest
-                    """
-                }
-            }
-        }
-        stage('Deploy') {
-            steps {
-                bat 'docker-compose down || exit 0'
-                bat 'docker-compose up -d'
-            }
-        }
+    }
+}
+
+stage('Deploy') {
+    steps {
+        sh 'docker-compose down || exit 0'
+        sh 'docker-compose up -d'
+    }
+}
+
     }
     post {
         success {
