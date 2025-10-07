@@ -1,6 +1,12 @@
 pipeline {
     agent any
 
+    tools {
+        maven 'Maven3.9.9'
+        jdk 'JDK17'
+        dockerTool 'Docker20'
+    }
+
     environment {
         DOCKERHUB_USER = 'aysekoc'
         BACKEND_IMAGE = "hospitalappointmentsystem-backend"
@@ -13,30 +19,17 @@ pipeline {
             }
         }
 
-        stage('Install JDK & Maven') {
-            steps {
-                sh '''
-                # JDK ve Maven yükle (Alpine/Debian tabanlı container için)
-                apt-get update && apt-get install -y openjdk-21-jdk maven
-                export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
-                export PATH=$JAVA_HOME/bin:$PATH
-                java -version
-                mvn -version
-                '''
-            }
-        }
-
         stage('Build Backend') {
             steps {
-                sh 'mvn clean package -DskipTests'
+                bat 'mvn clean package -DskipTests'
             }
         }
 
         stage('Build Frontend') {
             steps {
                 dir('hospital-frontend') {
-                    sh 'npm install'
-                    sh 'npm run build'
+                    bat 'npm install'
+                    bat 'npm run build'
                 }
             }
         }
@@ -44,19 +37,20 @@ pipeline {
         stage('Docker Build & Push Backend') {
             steps {
                 withCredentials([string(credentialsId: 'dockerhub-credentials', variable: 'DOCKERHUB_PASS')]) {
-                    sh '''
-                    echo $DOCKERHUB_PASS | docker login -u $DOCKERHUB_USER --password-stdin
-                    docker build -t $DOCKERHUB_USER/$BACKEND_IMAGE:latest -f Dockerfile .
-                    docker push $DOCKERHUB_USER/$BACKEND_IMAGE:latest
-                    '''
+                    // Windows CMD için --password-stdin yerine direkt değişkeni kullanıyoruz
+                    bat """
+                    docker login -u %DOCKERHUB_USER% -p %DOCKERHUB_PASS%
+                    docker build -t %DOCKERHUB_USER%/%BACKEND_IMAGE%:latest -f Dockerfile .
+                    docker push %DOCKERHUB_USER%/%BACKEND_IMAGE%:latest
+                    """
                 }
             }
         }
 
         stage('Deploy') {
             steps {
-                sh 'docker-compose down || true'
-                sh 'docker-compose up -d'
+                bat 'docker-compose down || exit 0'
+                bat 'docker-compose up -d'
             }
         }
     }
